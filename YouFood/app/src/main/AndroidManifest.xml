@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.youfood">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.YouFood"
+        android:usesCleartextTraffic="true">
+        <activity
+            android:name=".AccountInfoScreen"
+            android:exported="false" />
+        <activity
+            android:name=".NearbyTrucksScreen"
+            android:exported="false" />
+        <activity
+            android:name=".UserScreen"
+            android:exported="false"
+            android:label="@string/title_activity_user_screen"
+            android:theme="@style/Theme.YouFood.NoActionBar" />
+        <activity
+            android:name=".SignupScreen"
+            android:exported="false" />
+        <activity
+            android:name=".LoginScreen"
+            android:exported="false" />
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>
