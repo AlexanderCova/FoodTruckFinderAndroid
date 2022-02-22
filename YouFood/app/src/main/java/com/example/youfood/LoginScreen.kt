@@ -25,7 +25,7 @@ class LoginScreen : AppCompatActivity() {
 
 
         loginButton.setOnClickListener {
-            Fuel.get("https://foodtruckfindermi.com/login?email=${emailEdit.text}&password=${passwordEdit.text}&type=LOGIN")
+            Fuel.get("https://foodtruckfindermi.com/user_auth?email=${emailEdit.text}&password=${passwordEdit.text}&type=LOGIN")
                 .response { _request, _response, result ->
 
                     val (bytes) = result
