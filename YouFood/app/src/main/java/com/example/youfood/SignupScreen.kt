@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import com.github.kittinunf.fuel.Fuel
 
 class SignupScreen : AppCompatActivity() {
@@ -34,9 +35,7 @@ class SignupScreen : AppCompatActivity() {
                             val intent = Intent(this, UserScreen::class.java)
                             startActivity(intent)
                         } else if(loginResult.equals("call false")) {
-                            errorText.text = "Email is Already in Use!\nTry Logging in!!"
-                            errorText.visibility = View.VISIBLE
-                            loginButton.visibility = View.VISIBLE
+                            Toast.makeText(this, "Email is Already in Use. Try Logging in.", Toast.LENGTH_SHORT).show()
                         }
                     }
                 }

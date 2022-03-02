@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import com.github.kittinunf.fuel.Fuel
 
 class LoginScreen : AppCompatActivity() {
@@ -36,9 +37,7 @@ class LoginScreen : AppCompatActivity() {
                             val intent = Intent(this, UserScreen::class.java)
                             startActivity(intent)
                         } else if(loginResult.equals("call false")) {
-                            errorText.text = "Invalid Credentials\nCreate New Account?"
-                            errorText.visibility = View.VISIBLE
-                            signupButton.visibility = View.VISIBLE
+                            Toast.makeText(this, "Login Credentials Incorrect, Please Try Again.", Toast.LENGTH_SHORT).show()
                         }
                     }
                 }

@@ -3,11 +3,10 @@ package com.example.youfood
 import android.accounts.Account
 import android.content.Intent
 import android.os.Bundle
-import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.ListView
-import android.widget.SearchView
+import android.util.Log
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import com.github.kittinunf.fuel.Fuel
 
 class UserScreen : AppCompatActivity() {
 
@@ -27,6 +26,16 @@ class UserScreen : AppCompatActivity() {
             val intent = Intent(this, AccountInfoScreen::class.java)
             startActivity(intent)
         }
+
+        Fuel.get("https://foodtruckfindermi.com/truck_query")
+            .response { _request, _response, result ->
+                val (bytes) = result
+                if (bytes != null) {
+                    var stuff = "call ${String(bytes)}"
+
+                    Log.i("response", stuff)
+                }
+            }
 
 
         setupSearchBar()
