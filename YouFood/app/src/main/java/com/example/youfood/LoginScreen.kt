@@ -29,6 +29,7 @@ class LoginScreen : AppCompatActivity() {
                     val (bytes) = result
                     if (bytes != null) {
                         var loginResult = "call ${String(bytes)}"
+                        Log.i("stuff", loginResult)
 
                         if (loginResult.equals("call true")) {
                             val intent = Intent(this, UserScreen::class.java)

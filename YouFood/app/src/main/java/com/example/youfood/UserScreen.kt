@@ -15,6 +15,8 @@ class UserScreen : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_screen)
 
+        Log.i("HELLO", "loaded")
+
         //Setup Tab Changing button
         val nearbyTabButton = findViewById<Button>(R.id.nearbyTabButton)
 
@@ -23,14 +25,14 @@ class UserScreen : AppCompatActivity() {
             startActivity(intent)
         }
 
-        Fuel.get("https://foodtruckfindermi.com/truck_query")
+        Fuel.get("http://foodtruckfindermi.com/truck-query")
             .response { _request, _response, result ->
                 val (bytes) = result
                 if (bytes != null) {
-                    var stuff = "call ${String(bytes)}"
-
-                    Log.i("response", stuff)
+                    var loginResult = String(bytes).toA()
+                    Log.i("stuff", loginResult[1])
                 }
+
             }
 
 
