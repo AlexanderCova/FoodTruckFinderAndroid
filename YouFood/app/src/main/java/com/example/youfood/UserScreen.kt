@@ -33,11 +33,11 @@ class UserScreen : AppCompatActivity() {
                 val (bytes) = result
                 if (bytes != null) {
                     var response = String(bytes).split("$")
-                    val truck_array = response.toTypedArray()
+                    response = response.drop(1)
 
-                    for (i in truck_array) {
-                        Log.i("Trucks", i)
-                    }
+                    var truck_array = response.toTypedArray()
+
+
 
                     setupSearchBar(truck_array)
                 }
