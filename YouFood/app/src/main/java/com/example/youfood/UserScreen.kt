@@ -29,8 +29,8 @@ class UserScreen : AppCompatActivity() {
             .response { _request, _response, result ->
                 val (bytes) = result
                 if (bytes != null) {
-                    var loginResult = String(bytes).toA()
-                    Log.i("stuff", loginResult[1])
+                    var loginResult = String(bytes).split("$")
+                    Log.i("stuff", loginResult.toString())
                 }
 
             }
