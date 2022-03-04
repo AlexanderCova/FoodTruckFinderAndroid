@@ -5,10 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import com.github.kittinunf.fuel.Fuel
 
 class LoginScreen : AppCompatActivity() {
@@ -26,7 +23,7 @@ class LoginScreen : AppCompatActivity() {
 
 
         loginButton.setOnClickListener {
-            Fuel.get("https://foodtruckfindermi.com/user_auth?email=${emailEdit.text}&password=${passwordEdit.text}&type=LOGIN")
+            Fuel.get("http://foodtruckfindermi.com/login?email=${emailEdit.text}&password=${passwordEdit.text}")
                 .response { _request, _response, result ->
 
                     val (bytes) = result

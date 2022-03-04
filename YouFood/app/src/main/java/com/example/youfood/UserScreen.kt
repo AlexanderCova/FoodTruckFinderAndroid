@@ -15,10 +15,6 @@ class UserScreen : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_screen)
 
-
-
-
-
         //Setup Tab Changing button
         val nearbyTabButton = findViewById<Button>(R.id.nearbyTabButton)
 
