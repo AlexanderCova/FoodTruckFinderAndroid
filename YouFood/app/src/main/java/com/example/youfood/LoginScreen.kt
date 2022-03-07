@@ -4,9 +4,10 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.*
 import com.github.kittinunf.fuel.Fuel
+import com.google.android.material.snackbar.Snackbar
+
 
 class LoginScreen : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,7 +36,12 @@ class LoginScreen : AppCompatActivity() {
                             val intent = Intent(this, UserScreen::class.java)
                             startActivity(intent)
                         } else if(loginResult.equals("call false")) {
-                            Toast.makeText(this, "Login Credentials Incorrect, Please Try Again.", Toast.LENGTH_SHORT).show()
+                            val snackbar = Snackbar.make(
+                                it, "Incorrect Credentials",
+                                Snackbar.LENGTH_SHORT
+                            ).setAction("Action", null)
+
+                            snackbar.show()
                         }
                     }
                 }

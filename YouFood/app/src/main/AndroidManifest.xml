@@ -14,10 +14,8 @@
         android:usesCleartextTraffic="true">
         <activity
             android:name=".AccountInfoScreen"
-            android:exported="false" />
-        <activity
-            android:name=".NearbyTrucksScreen"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.YouFood.NoActionBar"/>
         <activity
             android:name=".UserScreen"
             android:exported="false"
@@ -25,13 +23,16 @@
             android:theme="@style/Theme.YouFood.NoActionBar" />
         <activity
             android:name=".SignupScreen"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.YouFood.NoActionBar"/>
         <activity
             android:name=".LoginScreen"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.YouFood.NoActionBar"/>
         <activity
             android:name=".MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/Theme.YouFood.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

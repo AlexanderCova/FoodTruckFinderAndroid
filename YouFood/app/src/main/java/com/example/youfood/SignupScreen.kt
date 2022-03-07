@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.View
 import android.widget.*
 import com.github.kittinunf.fuel.Fuel
+import com.google.android.material.snackbar.Snackbar
 
 class SignupScreen : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,7 +33,12 @@ class SignupScreen : AppCompatActivity() {
                             val intent = Intent(this, UserScreen::class.java)
                             startActivity(intent)
                         } else if(loginResult.equals("call false")) {
-                            Toast.makeText(this, "Email is Already in Use. Try Logging in.", Toast.LENGTH_SHORT).show()
+                            val snackbar = Snackbar.make(
+                                it, "Email Already Used",
+                                Snackbar.LENGTH_SHORT
+                            ).setAction("Action", null)
+
+                            snackbar.show()
                         }
                     }
                 }
