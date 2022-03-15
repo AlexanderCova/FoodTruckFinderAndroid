@@ -19,6 +19,7 @@ class UserScreen : AppCompatActivity() {
 
         //Setup Tab Changing button
         val nearbyTabButton = findViewById<Button>(R.id.nearbyTabButton)
+        val trucksList = findViewById<ListView>(R.id.truckList)
 
 
         nearbyTabButton.setOnClickListener {
@@ -31,24 +32,36 @@ class UserScreen : AppCompatActivity() {
         Fuel.get("http://foodtruckfindermi.com/truck-query")
             .response { _request, _response, result ->
                 val (bytes) = result
+                Log.i("request", "request sent")
                 if (bytes != null) {
                     var response = String(bytes).split("$")
                     response = response.drop(1)
+                    Log.i("request", response.toString())
 
                     var truck_array = response.toTypedArray()
 
 
 
-                    setupSearchBar(truck_array)
+                    setupSearchBar(response)
                 }
 
             }
 
 
+        trucksList.setOnItemClickListener { parent, _, i, _ ->
+            val truckName = parent.getItemAtPosition(i) as String
+            val intent = Intent(this, TruckScreen::class.java)
+            intent.putExtra("TruckName", truckName)
+            startActivity(intent)
+        }
+
+
+
+
 
     }
 
-    private fun setupSearchBar(trucks : Array<String>) {
+    private fun setupSearchBar(trucks : List<String>) {
         //seting up search bar for trucks
 
         val searchView = findViewById<SearchView>(R.id.searchView)
