@@ -14,9 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.YouFood"
         android:usesCleartextTraffic="true">
-        <activity
-            android:name=".TruckScreen"
-            android:exported="false" />
+
         <!--
              TODO: Before you run your application, you need a Google Maps API key.
 
@@ -30,14 +28,10 @@
         -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCoXCjYTA4EZqNq9ZcErIQQovhJUStvcvk" />
+            android:value="${MAPS_API_KEY}" />
 
         <activity
-            android:name=".MapsActivity"
-            android:exported="false"
-            android:label="@string/title_activity_maps" />
-        <activity
-            android:name=".truckScreen"
+            android:name=".TruckScreen"
             android:exported="false" />
         <activity
             android:name=".AccountInfoScreen"
