@@ -15,11 +15,11 @@ class UserScreen : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_screen)
 
-        Log.i("HELLO", "loaded")
-
         //Setup Tab Changing button
         val nearbyTabButton = findViewById<Button>(R.id.nearbyTabButton)
         val trucksList = findViewById<ListView>(R.id.truckList)
+
+        setup_search()
 
 
         nearbyTabButton.setOnClickListener {
@@ -29,23 +29,6 @@ class UserScreen : AppCompatActivity() {
 
 
 
-        Fuel.get("http://foodtruckfindermi.com/truck-query")
-            .response { _request, _response, result ->
-                val (bytes) = result
-                Log.i("request", "request sent")
-                if (bytes != null) {
-                    var response = String(bytes).split("$")
-                    response = response.drop(1)
-                    Log.i("request", response.toString())
-
-                    var truck_array = response.toTypedArray()
-
-
-
-                    setupSearchBar(response)
-                }
-
-            }
 
 
         trucksList.setOnItemClickListener { parent, _, i, _ ->
@@ -61,34 +44,49 @@ class UserScreen : AppCompatActivity() {
 
     }
 
-    private fun setupSearchBar(trucks : List<String>) {
-        //seting up search bar for trucks
+    fun setup_search() {
+        Fuel.get("http://foodtruckfindermi.com/truck-query")
+            .response { _request, _response, result ->
+                val (bytes) = result
+                Log.i("request", "request sent")
+                if (bytes != null) {
+                    var response = String(bytes).split("$")
+                    response = response.drop(1)
+                    Log.i("request", response.toString())
 
-        val searchView = findViewById<SearchView>(R.id.searchView)
-        val trucksList = findViewById<ListView>(R.id.truckList)
-
-        val truckAdapter : ArrayAdapter<String> = ArrayAdapter(
-            this, android.R.layout.simple_list_item_1,
-            trucks
-        )
-
-        trucksList.adapter = truckAdapter
+                    var truck_array = response.toTypedArray()
 
 
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                searchView.clearFocus()
-                if (trucks.contains(query)) {
-                    truckAdapter.filter.filter(query)
+
+                    val searchView = findViewById<SearchView>(R.id.searchView)
+                    val trucksList = findViewById<ListView>(R.id.truckList)
+
+                    val truckAdapter : ArrayAdapter<String> = ArrayAdapter(
+                        this, android.R.layout.simple_list_item_1,
+                        truck_array
+                    )
+
+                    trucksList.adapter = truckAdapter
+
+
+                    searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+                        override fun onQueryTextSubmit(query: String?): Boolean {
+                            searchView.clearFocus()
+                            if (truck_array.contains(query)) {
+                                truckAdapter.filter.filter(query)
+                            }
+
+                            return false
+                        }
+
+                        override fun onQueryTextChange(newText: String?): Boolean{
+                            truckAdapter.filter.filter(newText)
+                            return false
+                        }
+                    })
                 }
 
-                return false
             }
 
-            override fun onQueryTextChange(newText: String?): Boolean{
-                truckAdapter.filter.filter(newText)
-                return false
-            }
-        })
     }
 }

@@ -4,12 +4,12 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.*
 import com.github.kittinunf.fuel.Fuel
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import io.github.rybalkinsd.kohttp.ext.httpGet
 
 class TruckScreen : AppCompatActivity(), OnMapReadyCallback {
 
@@ -21,6 +21,11 @@ class TruckScreen : AppCompatActivity(), OnMapReadyCallback {
         setContentView(R.layout.activity_truck_screen)
 
         val truckName = intent.getStringExtra("TruckName")
+        val backButton = findViewById<Button>(R.id.truckBackButton)
+
+        /*val response = "http://foodtruckfindermi.com/get-truck-info?name=${truckName}".httpGet()
+        Log.i("kohttp", response.toString())*/
+
 
         Fuel.get("http://foodtruckfindermi.com/get-truck-info?name=${truckName}")
             .response { _request, _response, result ->
@@ -39,6 +44,11 @@ class TruckScreen : AppCompatActivity(), OnMapReadyCallback {
 
             }
 
+        backButton.setOnClickListener {
+            val intent = Intent(this, UserScreen::class.java)
+            startActivity(intent)
+        }
+
         val map = getSupportFragmentManager().findFragmentById(R.id.map) as SupportMapFragment
         map.getMapAsync(this)
     }
@@ -51,13 +61,27 @@ class TruckScreen : AppCompatActivity(), OnMapReadyCallback {
         lon = info[5].toDouble()
         lat = info[6].toDouble()
 
+        val nameLabel = findViewById<TextView>(R.id.truckName)
+        val openLabel = findViewById<TextView>(R.id.openLabel)
+        val foodLabel = findViewById<TextView>(R.id.foodLabel)
+        val emailLabel = findViewById<TextView>(R.id.emailLabel)
+
+        nameLabel.text = name
+        when (isOpen) {
+            "0" ->  openLabel.text = "Closed"
+            "1" ->  openLabel.text = "Open"
+        }
+        foodLabel.text = food
+        emailLabel.text = email
 
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
         googleMap.addMarker(
             MarkerOptions()
-                .position(LatLng(lat, lon))
-        )
+                .position(LatLng(lat, lon)))
+        googleMap.moveCamera(CameraUpdateFactory.newLatLng(LatLng(lat, lon)))
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(lat, lon), 15F));
+
     }
 }

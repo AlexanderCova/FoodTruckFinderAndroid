@@ -22,7 +22,7 @@ class SignupScreen : AppCompatActivity() {
         val backButton = findViewById<Button>(R.id.signupBackButton)
 
 
-        signupButton.setOnClickListener {
+        signupButton.setOnClickListener { it ->
             Fuel.get("http://foodtruckfindermi.com/signup?email=${emailEdit.text}&password=${passwordEdit.text}")
                 .response { _request, _response, result ->
                     val (bytes) = result
