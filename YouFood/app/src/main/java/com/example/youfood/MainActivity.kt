@@ -8,6 +8,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.httpGet
 
 
@@ -17,9 +18,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val response = "http://foodtruckfindermi.com/true".httpGet()
-        val values = response
-        Log.i("kohttp")
 
         val loginButton = findViewById<Button>(R.id.loginScreenButton)
         val signupButton = findViewById<Button>(R.id.signupScreenButton)

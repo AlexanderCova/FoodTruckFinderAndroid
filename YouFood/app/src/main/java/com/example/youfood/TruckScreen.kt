@@ -6,10 +6,11 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.*
 import com.github.kittinunf.fuel.Fuel
+import com.github.kittinunf.fuel.coroutines.awaitStringResponseResult
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import io.github.rybalkinsd.kohttp.ext.httpGet
+import kotlinx.coroutines.runBlocking
 
 class TruckScreen : AppCompatActivity(), OnMapReadyCallback {
 
@@ -23,26 +24,22 @@ class TruckScreen : AppCompatActivity(), OnMapReadyCallback {
         val truckName = intent.getStringExtra("TruckName")
         val backButton = findViewById<Button>(R.id.truckBackButton)
 
-        /*val response = "http://foodtruckfindermi.com/get-truck-info?name=${truckName}".httpGet()
-        Log.i("kohttp", response.toString())*/
 
-
-        Fuel.get("http://foodtruckfindermi.com/get-truck-info?name=${truckName}")
-            .response { _request, _response, result ->
-                val (bytes) = result
-                Log.i("request", "request sent")
-                if (bytes != null) {
-                    var response = String(bytes).split("$")
-                    response = response.drop(1)
-                    Log.i("request", response.toString())
-
-                    var infoArray = response.toTypedArray()
+        runBlocking {
+            val (request, response, result) = Fuel.get("http://foodtruckfindermi.com/get-truck-info?name=${truckName}").awaitStringResponseResult()
+            result.fold(
+                {data ->
+                    var answer = data.split("$")
+                    answer = answer.drop(1)
+                    var infoArray = answer.toTypedArray()
 
                     load_screen(infoArray)
-
+                },
+                { error ->
+                    Log.e("http", "${error.exception}")
                 }
-
-            }
+            )
+        }
 
         backButton.setOnClickListener {
             val intent = Intent(this, UserScreen::class.java)

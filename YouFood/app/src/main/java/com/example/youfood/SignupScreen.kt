@@ -7,7 +7,9 @@ import android.util.Log
 import android.view.View
 import android.widget.*
 import com.github.kittinunf.fuel.Fuel
+import com.github.kittinunf.fuel.coroutines.awaitStringResponseResult
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.runBlocking
 
 class SignupScreen : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,31 +25,38 @@ class SignupScreen : AppCompatActivity() {
 
 
         signupButton.setOnClickListener { it ->
-            Fuel.get("http://foodtruckfindermi.com/signup?email=${emailEdit.text}&password=${passwordEdit.text}")
-                .response { _request, _response, result ->
-                    val (bytes) = result
-                    if (bytes != null) {
-                        var loginResult = "call ${String(bytes)}"
+            runBlocking {
+                val (_request, _response, result) = Fuel.post("http://foodtruckfindermi.com/signup", listOf("email" to emailEdit.text, "password" to passwordEdit.text))
+                    .awaitStringResponseResult()
 
-                        if (loginResult.equals("call true")) {
-                            val intent = Intent(this, UserScreen::class.java)
-                            startActivity(intent)
-                        } else if(loginResult.equals("call false")) {
-                            val snackbar = Snackbar.make(
-                                it, "Email Already Used",
-                                Snackbar.LENGTH_SHORT
-                            ).setAction("Action", null)
+                result.fold( {data ->
 
-                            snackbar.show()
-                        }
+                    if (data.equals("true")) {
+                        startIntent()
+                    } else if (data.equals("false")) {
+                        val snackbar = Snackbar.make(
+                            it, "Email Already Used",
+                            Snackbar.LENGTH_SHORT
+                        ).setAction("Action", null)
+
+                        snackbar.show()
+
                     }
-                }
+                             },
+                    {error -> Log.e("http", "${error}")})
+            }
         }
+
 
 
         backButton.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
+    }
+
+    fun startIntent(){
+        val intent = Intent(this, UserScreen::class.java)
+        startActivity(intent)
     }
 }

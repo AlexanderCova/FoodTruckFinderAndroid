@@ -6,7 +6,9 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.*
 import com.github.kittinunf.fuel.Fuel
+import com.github.kittinunf.fuel.coroutines.awaitStringResponseResult
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.runBlocking
 
 
 class LoginScreen : AppCompatActivity() {
@@ -24,28 +26,28 @@ class LoginScreen : AppCompatActivity() {
 
 
         loginButton.setOnClickListener {
-            Fuel.get("http://foodtruckfindermi.com/login?email=${emailEdit.text}&password=${passwordEdit.text}")
-                .response { _request, _response, result ->
+            runBlocking {
+                val (_request, _response, result) = Fuel.get("http://foodtruckfindermi.com/login?email=${emailEdit.text}&password=${passwordEdit.text}")
+                    .awaitStringResponseResult()
 
-                    val (bytes) = result
-                    if (bytes != null) {
-                        var loginResult = "call ${String(bytes)}"
-                        Log.i("stuff", loginResult)
-
-                        if (loginResult.equals("call true")) {
-                            val intent = Intent(this, UserScreen::class.java)
-                            startActivity(intent)
-                        } else if(loginResult.equals("call false")) {
+                result.fold(
+                    {data ->
+                        if (data.equals("true")) {
+                            startIntent()
+                        } else if (data.equals("false")) {
                             val snackbar = Snackbar.make(
                                 it, "Incorrect Credentials",
                                 Snackbar.LENGTH_SHORT
                             ).setAction("Action", null)
 
                             snackbar.show()
-                        }
-                    }
-                }
+                        }},
+                    {error -> Log.e("http", "${error}")}
+                )
+
+            }
         }
+
 
         signupButton.setOnClickListener {
             val intent = Intent(this, SignupScreen::class.java)
@@ -56,5 +58,9 @@ class LoginScreen : AppCompatActivity() {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
+    }
+    fun startIntent(){
+        val intent = Intent(this, UserScreen::class.java)
+        startActivity(intent)
     }
 }

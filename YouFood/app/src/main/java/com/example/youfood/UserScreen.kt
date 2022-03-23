@@ -1,12 +1,13 @@
 package com.example.youfood
 
-import android.accounts.Account
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.github.kittinunf.fuel.Fuel
+import com.github.kittinunf.fuel.coroutines.awaitStringResponseResult
+import kotlinx.coroutines.runBlocking
 
 class UserScreen : AppCompatActivity() {
 
@@ -44,32 +45,41 @@ class UserScreen : AppCompatActivity() {
 
     }
 
+    fun array(array: Array<String>) : ArrayAdapter<String> {
+        val truckAdapter: ArrayAdapter<String> = ArrayAdapter(
+            this, android.R.layout.simple_list_item_1,
+            array
+        )
+
+        return truckAdapter
+    }
+
     fun setup_search() {
-        Fuel.get("http://foodtruckfindermi.com/truck-query")
-            .response { _request, _response, result ->
-                val (bytes) = result
-                Log.i("request", "request sent")
-                if (bytes != null) {
-                    var response = String(bytes).split("$")
+
+        runBlocking {
+            val (request, _response, result) = Fuel.get("http://foodtruckfindermi.com/truck-query")
+                .awaitStringResponseResult()
+
+            result.fold(
+                { data ->
+
+
+                    var response = data.split("$")
                     response = response.drop(1)
                     Log.i("request", response.toString())
 
                     var truck_array = response.toTypedArray()
 
 
-
                     val searchView = findViewById<SearchView>(R.id.searchView)
                     val trucksList = findViewById<ListView>(R.id.truckList)
 
-                    val truckAdapter : ArrayAdapter<String> = ArrayAdapter(
-                        this, android.R.layout.simple_list_item_1,
-                        truck_array
-                    )
+                    val truckAdapter = array(truck_array)
 
                     trucksList.adapter = truckAdapter
 
 
-                    searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+                    searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                         override fun onQueryTextSubmit(query: String?): Boolean {
                             searchView.clearFocus()
                             if (truck_array.contains(query)) {
@@ -79,14 +89,19 @@ class UserScreen : AppCompatActivity() {
                             return false
                         }
 
-                        override fun onQueryTextChange(newText: String?): Boolean{
+                        override fun onQueryTextChange(newText: String?): Boolean {
                             truckAdapter.filter.filter(newText)
                             return false
                         }
                     })
-                }
+                },
+                { error -> Log.e("http", "${error}")}
+            )
 
-            }
+
+        }
+
 
     }
+
 }
