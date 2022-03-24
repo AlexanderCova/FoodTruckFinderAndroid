@@ -16,6 +16,7 @@ class TruckScreen : AppCompatActivity(), OnMapReadyCallback {
 
     private var lon : Double = 0.0
     private var lat : Double = 0.0
+    private lateinit var infoArray : Array<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,6 +24,7 @@ class TruckScreen : AppCompatActivity(), OnMapReadyCallback {
 
         val truckName = intent.getStringExtra("TruckName")
         val backButton = findViewById<Button>(R.id.truckBackButton)
+        val reviewButton = findViewById<Button>(R.id.reviewsButton)
 
 
         runBlocking {
@@ -31,7 +33,7 @@ class TruckScreen : AppCompatActivity(), OnMapReadyCallback {
                 {data ->
                     var answer = data.split("$")
                     answer = answer.drop(1)
-                    var infoArray = answer.toTypedArray()
+                    infoArray = answer.toTypedArray()
 
                     load_screen(infoArray)
                 },
@@ -45,6 +47,15 @@ class TruckScreen : AppCompatActivity(), OnMapReadyCallback {
             val intent = Intent(this, UserScreen::class.java)
             startActivity(intent)
         }
+
+        reviewButton.setOnClickListener {
+            val intent = Intent(this, ReviewScreen::class.java)
+            intent.putExtra("truckemail", infoArray[1])
+            startActivity(intent)
+        }
+
+
+
 
         val map = getSupportFragmentManager().findFragmentById(R.id.map) as SupportMapFragment
         map.getMapAsync(this)

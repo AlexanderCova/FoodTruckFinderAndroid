@@ -14,7 +14,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.YouFood"
         android:usesCleartextTraffic="true">
-
+        <activity
+            android:name=".ReviewScreen"
+            android:exported="false" />
         <!--
              TODO: Before you run your application, you need a Google Maps API key.
 

@@ -26,4 +26,5 @@
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="nearby_button_hint">Nearby</string>
     <string name="title_activity_maps">MapsActivity</string>
+    <string name="reviews_hint">Reviews</string>
 </resources>

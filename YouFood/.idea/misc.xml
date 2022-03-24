@@ -37,8 +37,9 @@
         <entry key="..\:/Users/covaa/Documents/FoodTruckFinderMIAndroid/YouFood/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.3145" />
         <entry key="app/src/main/res/layout/activity_login_screen.xml" value="0.20833333333333334" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.20833333333333334" />
+        <entry key="app/src/main/res/layout/activity_review_screen.xml" value="0.20833333333333334" />
         <entry key="app/src/main/res/layout/activity_signup_screen.xml" value="0.20833333333333334" />
-        <entry key="app/src/main/res/layout/activity_truck_screen.xml" value="0.5" />
+        <entry key="app/src/main/res/layout/activity_truck_screen.xml" value="0.3684036254882813" />
         <entry key="app/src/main/res/layout/activity_user_screen.xml" value="0.22" />
         <entry key="app/src/main/res/layout/fragment_maps.xml" value="0.11956521739130435" />
       </map>

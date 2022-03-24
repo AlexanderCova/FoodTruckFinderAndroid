@@ -20,6 +20,7 @@ class UserScreen : AppCompatActivity() {
         val nearbyTabButton = findViewById<Button>(R.id.nearbyTabButton)
         val trucksList = findViewById<ListView>(R.id.truckList)
 
+
         setup_search()
 
 
@@ -27,7 +28,6 @@ class UserScreen : AppCompatActivity() {
             val intent = Intent(this, AccountInfoScreen::class.java)
             startActivity(intent)
         }
-
 
 
 
