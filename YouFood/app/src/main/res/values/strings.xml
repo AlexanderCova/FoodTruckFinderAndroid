@@ -27,4 +27,8 @@
     <string name="nearby_button_hint">Nearby</string>
     <string name="title_activity_maps">MapsActivity</string>
     <string name="reviews_hint">Reviews</string>
+    <string name="submit_hint">Submit</string>
+    <string name="review_body_hint">Type Your Review Here.</string>
+
+
 </resources>

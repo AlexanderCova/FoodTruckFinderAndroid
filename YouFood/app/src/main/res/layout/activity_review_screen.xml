@@ -6,15 +6,40 @@
     android:layout_height="match_parent"
     tools:context=".ReviewScreen">
 
+    <View
+        android:id="@+id/reviewTitleBackground"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/title_background"
+        app:layout_constraintBottom_toBottomOf="@+id/reviewBackButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/reviewBackButton"
+        android:layout_width="86dp"
+        android:layout_height="66dp"
+        android:layout_marginTop="4dp"
+        android:background="@android:drawable/screen_background_light_transparent"
+        android:backgroundTint="@color/dark_red"
+        android:contentDescription="@string/back_hint"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_back_arrow_48"
+        tools:ignore="ImageContrastCheck" />
+
     <TextView
-        android:id="@+id/nameLabel"
+        android:id="@+id/reviewNameLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:textAlignment="center"
         android:textSize="34sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="TextContrastCheck"
         tools:text="TruckName" />
 
     <TextView
@@ -26,7 +51,7 @@
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nameLabel" />
+        app:layout_constraintTop_toBottomOf="@+id/reviewNameLabel" />
 
     <ListView
         android:id="@+id/reviewList"
@@ -69,9 +94,10 @@
             android:autofillHints=""
             android:ems="10"
             android:gravity="start|top"
-            android:hint="Type Your Review Here."
+            android:hint="@string/review_body_hint"
             android:inputType="textMultiLine"
-            android:paddingLeft="16dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="2dp"
             android:textSize="14sp" />
     </LinearLayout>
 
@@ -81,17 +107,8 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
-        android:text="Submit"
+        android:text="@string/submit_hint"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <ImageButton
-        android:id="@+id/imageButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@android:drawable/ic_menu_revert" />
 </androidx.constraintlayout.widget.ConstraintLayout>

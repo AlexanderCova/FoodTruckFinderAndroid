@@ -46,11 +46,13 @@ class TruckScreen : AppCompatActivity(), OnMapReadyCallback {
         backButton.setOnClickListener {
             val intent = Intent(this, UserScreen::class.java)
             startActivity(intent)
+            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
         }
 
         reviewButton.setOnClickListener {
             val intent = Intent(this, ReviewScreen::class.java)
             intent.putExtra("truckemail", infoArray[1])
+            intent.putExtra("TruckName", truckName)
             startActivity(intent)
         }
 
