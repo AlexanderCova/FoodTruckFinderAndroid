@@ -33,6 +33,8 @@ class LoginScreen : AppCompatActivity() {
                 result.fold(
                     {data ->
                         if (data.equals("true")) {
+                            val db = DBHelper(this@LoginScreen, null)
+                            db.addUser(emailEdit.text.toString(), passwordEdit.text.toString())
                             startIntent()
                         } else if (data.equals("false")) {
                             val snackbar = Snackbar.make(

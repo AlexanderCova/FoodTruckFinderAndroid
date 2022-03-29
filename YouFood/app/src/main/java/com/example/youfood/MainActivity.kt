@@ -16,6 +16,18 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val db = DBHelper(this, null)
+        val cursor = db.getUser()
+
+        cursor!!.moveToFirst()
+        val email = cursor.getString(cursor.getColumnIndex("email").toInt())
+
+        if (!email.isNullOrEmpty()) {
+            val intent = Intent(this, UserScreen::class.java)
+            startActivity(intent)
+        }
+
+
         setContentView(R.layout.activity_main)
 
 

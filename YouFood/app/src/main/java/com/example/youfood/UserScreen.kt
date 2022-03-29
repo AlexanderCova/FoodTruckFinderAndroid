@@ -19,6 +19,7 @@ class UserScreen : AppCompatActivity() {
         //Setup Tab Changing button
         val nearbyTabButton = findViewById<Button>(R.id.nearbyTabButton)
         val trucksList = findViewById<ListView>(R.id.truckList)
+        val settingsButton = findViewById<ImageButton>(R.id.settingButton)
 
 
         setup_search()
@@ -26,6 +27,11 @@ class UserScreen : AppCompatActivity() {
 
         nearbyTabButton.setOnClickListener {
             val intent = Intent(this, AccountInfoScreen::class.java)
+            startActivity(intent)
+        }
+
+        settingsButton.setOnClickListener{
+            val intent = Intent(this, SettingsScreen::class.java)
             startActivity(intent)
         }
 

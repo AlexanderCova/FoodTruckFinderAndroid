@@ -15,6 +15,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.YouFood"
         android:usesCleartextTraffic="true">
+        <activity
+            android:name=".SettingsScreen"
+            android:exported="false" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -23,11 +26,11 @@
         <activity
             android:name=".ReviewScreen"
             android:exported="false"
-            android:theme="@style/Theme.YouFood.NoActionBar"/>
+            android:theme="@style/Theme.YouFood.NoActionBar" />
         <activity
             android:name=".TruckScreen"
             android:exported="false"
-            android:theme="@style/Theme.YouFood.NoActionBar"/>
+            android:theme="@style/Theme.YouFood.NoActionBar" />
         <activity
             android:name=".AccountInfoScreen"
             android:exported="false"

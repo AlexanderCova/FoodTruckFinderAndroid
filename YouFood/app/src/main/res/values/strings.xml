@@ -29,6 +29,8 @@
     <string name="reviews_hint">Reviews</string>
     <string name="submit_hint">Submit</string>
     <string name="review_body_hint">Type Your Review Here.</string>
+    <string name="settings_hint">Settings</string>
+    <string name="logout_hint">Logout</string>
 
 
 </resources>

@@ -9,6 +9,7 @@ import android.widget.*
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.coroutines.awaitStringResponseResult
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.activity_login_screen.*
 import kotlinx.coroutines.runBlocking
 
 class SignupScreen : AppCompatActivity() {
@@ -32,6 +33,9 @@ class SignupScreen : AppCompatActivity() {
                 result.fold( {data ->
 
                     if (data.equals("true")) {
+                        val db = DBHelper(this@SignupScreen, null)
+
+                        db.addUser(emailEdit.text.toString(), passwordEdit.text.toString())
                         startIntent()
                     } else if (data.equals("false")) {
                         val snackbar = Snackbar.make(

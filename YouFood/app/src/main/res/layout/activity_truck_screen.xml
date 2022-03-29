@@ -13,26 +13,17 @@
         android:layout_height="match_parent"
         android:layout_weight=".5">
 
-        <View
-            android:id="@+id/truckTitleBackground"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_marginBottom="-8dp"
-            android:background="@drawable/title_background"
-            app:layout_constraintBottom_toBottomOf="@+id/truckName"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0" />
-
         <TextView
             android:id="@+id/truckName"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+            android:background="@drawable/title_background"
+            android:padding="16dp"
+            android:textAlignment="center"
+            android:textColor="@color/white"
             android:textSize="34sp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.497"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="TextContrastCheck"
@@ -86,14 +77,16 @@
 
         <ImageButton
             android:id="@+id/truckBackButton"
-            android:layout_width="0dp"
-            android:layout_height="53dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:backgroundTint="@color/dark_red"
+            android:layout_marginTop="8dp"
+            android:backgroundTint="@android:color/transparent"
             android:contentDescription="@string/back_hint"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_back_arrow_48"
+            app:tint="@color/white"
             tools:ignore="ImageContrastCheck" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
