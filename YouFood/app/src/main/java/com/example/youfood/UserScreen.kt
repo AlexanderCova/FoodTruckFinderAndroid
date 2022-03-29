@@ -2,6 +2,7 @@ package com.example.youfood
 
 import android.content.Intent
 import android.os.Bundle
+import android.provider.CalendarContract
 import android.util.Log
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -18,6 +19,7 @@ class UserScreen : AppCompatActivity() {
 
         //Setup Tab Changing button
         val nearbyTabButton = findViewById<Button>(R.id.nearbyTabButton)
+        val eventTabButton = findViewById<Button>(R.id.eventTabButton)
         val trucksList = findViewById<ListView>(R.id.truckList)
         val settingsButton = findViewById<ImageButton>(R.id.settingButton)
 
@@ -26,7 +28,12 @@ class UserScreen : AppCompatActivity() {
 
 
         nearbyTabButton.setOnClickListener {
-            val intent = Intent(this, AccountInfoScreen::class.java)
+            val intent = Intent(this, NearbyTrucksScreen::class.java)
+            startActivity(intent)
+        }
+
+        eventTabButton.setOnClickListener {
+            val intent = Intent(this, EventsScreen::class.java)
             startActivity(intent)
         }
 

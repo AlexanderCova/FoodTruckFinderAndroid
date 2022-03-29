@@ -16,6 +16,12 @@
         android:theme="@style/Theme.YouFood"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".EventInfoScreen"
+            android:exported="false" />
+        <activity
+            android:name=".EventsScreen"
+            android:exported="false" />
+        <activity
             android:name=".SettingsScreen"
             android:exported="false" />
 
@@ -32,7 +38,7 @@
             android:exported="false"
             android:theme="@style/Theme.YouFood.NoActionBar" />
         <activity
-            android:name=".AccountInfoScreen"
+            android:name=".NearbyTrucksScreen"
             android:exported="false"
             android:theme="@style/Theme.YouFood.NoActionBar" />
         <activity

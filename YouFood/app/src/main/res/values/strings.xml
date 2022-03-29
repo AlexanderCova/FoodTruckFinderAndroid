@@ -6,24 +6,12 @@
     <string name="login_hint">Login</string>
     <string name="title_text">YouFoodFinder</string>
     <string name="back_hint">Back</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="home_fragment">Home Fragment</string>
-    <string name="sport_fragment">Sport Fragment</string>
-    <string name="movie_fragment">Movie Fragment</string>
     <string name="title_activity_user_screen">UserScreen</string>
     <string name="tab_text_1">Search Trucks</string>
     <string name="tab_text_2">Nearby Trucks</string>
-    <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
+    <string name="tab_text_3">Events</string>
 
-    <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="nearby_button_hint">Nearby</string>
     <string name="title_activity_maps">MapsActivity</string>
     <string name="reviews_hint">Reviews</string>
