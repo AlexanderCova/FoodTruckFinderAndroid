@@ -23,19 +23,19 @@ class TruckScreen : AppCompatActivity(), OnMapReadyCallback {
         setContentView(R.layout.activity_truck_screen)
 
         val truckName = intent.getStringExtra("TruckName")
-        val backButton = findViewById<Button>(R.id.truckBackButton)
+        val backButton = findViewById<ImageButton>(R.id.truckBackButton)
         val reviewButton = findViewById<Button>(R.id.reviewsButton)
 
 
         runBlocking {
-            val (request, response, result) = Fuel.get("http://foodtruckfindermi.com/get-truck-info?name=${truckName}").awaitStringResponseResult()
+            val (_, _, result) = Fuel.get("http://foodtruckfindermi.com/get-truck-info?name=${truckName}").awaitStringResponseResult()
             result.fold(
                 {data ->
                     var answer = data.split("$")
                     answer = answer.drop(1)
                     infoArray = answer.toTypedArray()
 
-                    load_screen(infoArray)
+                    loadScreen(infoArray)
                 },
                 { error ->
                     Log.e("http", "${error.exception}")
@@ -59,11 +59,11 @@ class TruckScreen : AppCompatActivity(), OnMapReadyCallback {
 
 
 
-        val map = getSupportFragmentManager().findFragmentById(R.id.map) as SupportMapFragment
+        val map = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         map.getMapAsync(this)
     }
 
-    private fun load_screen(info : Array<String>) {
+    private fun loadScreen(info : Array<String>) {
         val name = info[0]
         val email = info[1]
         val food = info[3]
@@ -78,8 +78,8 @@ class TruckScreen : AppCompatActivity(), OnMapReadyCallback {
 
         nameLabel.text = name
         when (isOpen) {
-            "0" ->  openLabel.text = "Closed"
-            "1" ->  openLabel.text = "Open"
+            "0" ->  openLabel.text = getString(R.string.closed_hint)
+            "1" ->  openLabel.text = getString(R.string.open_hint)
         }
         foodLabel.text = food
         emailLabel.text = email
@@ -91,7 +91,7 @@ class TruckScreen : AppCompatActivity(), OnMapReadyCallback {
             MarkerOptions()
                 .position(LatLng(lat, lon)))
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(LatLng(lat, lon)))
-        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(lat, lon), 15F));
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(lat, lon), 15F))
 
     }
 }

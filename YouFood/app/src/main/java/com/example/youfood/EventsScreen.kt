@@ -32,25 +32,25 @@ class EventsScreen : AppCompatActivity() {
 
 
         runBlocking {
-            val (request, response, result) = Fuel.get("http://foodtruckfindermi.com/event-query")
+            val (_, _, result) = Fuel.get("http://foodtruckfindermi.com/event-query")
                 .awaitStringResponseResult()
 
             result.fold(
                 { data ->
-                    var eventArray = data.split("^")
+                    val eventArray = data.split("^")
                     val eventNameArray = eventArray[0].split("`").drop(1)
                     val eventDescArray = eventArray[1].split("`").drop(1)
                     val eventDateArray = eventArray[2].split("`").drop(1)
                     val searchView = findViewById<SearchView>(R.id.searchView)
 
-                    var eventArrayList = ArrayList<Event>()
+                    val eventArrayList = ArrayList<Event>()
 
                     for (i in eventNameArray.indices) {
                         val event = Event(eventNameArray[i], eventDescArray[i], eventDateArray[i])
                         eventArrayList.add(event)
                     }
                     eventList.adapter = EventAdapter(this@EventsScreen, eventArrayList)
-                    eventList.setOnItemClickListener { adapterView, view, position, l ->
+                    eventList.setOnItemClickListener { _, _, position, _ ->
 
                         val intent = Intent(this@EventsScreen, EventInfoScreen::class.java)
                         intent.putExtra("name", eventNameArray[position])

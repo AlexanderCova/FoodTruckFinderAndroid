@@ -19,6 +19,13 @@
     <string name="review_body_hint">Type Your Review Here.</string>
     <string name="settings_hint">Settings</string>
     <string name="logout_hint">Logout</string>
+    <string name="closed_hint">Closed</string>
+    <string name="open_hint">Open</string>
+
+    <string name="unknown_going">Going?</string>
+    <string name="unknown_intrested">Interested?</string>
+    <string name="going">Going</string>
+    <string name="interested">Interested</string>
 
 
 </resources>

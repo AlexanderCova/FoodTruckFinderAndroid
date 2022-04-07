@@ -1,11 +1,13 @@
 package com.example.youfood
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.*
 
 class SettingsScreen : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings_screen)
@@ -23,7 +25,7 @@ class SettingsScreen : AppCompatActivity() {
             val cursor = db.getUser()
 
             cursor!!.moveToFirst()
-            val email = cursor.getString(cursor.getColumnIndex("email").toInt())
+            val email = cursor.getString(cursor.getColumnIndex(DBHelper.EMAIL_COL).toInt())
             db.deleteUser(email)
 
             val intent = Intent(this, MainActivity::class.java)

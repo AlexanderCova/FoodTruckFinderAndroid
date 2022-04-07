@@ -2,7 +2,6 @@ package com.example.youfood
 
 import android.content.Intent
 import android.os.Bundle
-import android.provider.CalendarContract
 import android.util.Log
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -24,7 +23,7 @@ class UserScreen : AppCompatActivity() {
         val settingsButton = findViewById<ImageButton>(R.id.settingButton)
 
 
-        setup_search()
+        setupSearch()
 
 
         nearbyTabButton.setOnClickListener {
@@ -67,7 +66,7 @@ class UserScreen : AppCompatActivity() {
         return truckAdapter
     }
 
-    fun setup_search() {
+    private fun setupSearch() {
 
         runBlocking {
             val (request, _response, result) = Fuel.get("http://foodtruckfindermi.com/truck-query")

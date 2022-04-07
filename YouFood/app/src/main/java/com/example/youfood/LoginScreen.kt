@@ -19,7 +19,6 @@ class LoginScreen : AppCompatActivity() {
         val emailEdit = findViewById<EditText>(R.id.loginEmailEdit)
         val passwordEdit = findViewById<EditText>(R.id.loginPasswordEdit)
         val loginButton = findViewById<Button>(R.id.loginButton)
-        val errorText = findViewById<TextView>(R.id.loginErrorText)
         val signupButton = findViewById<Button>(R.id.redirectSignupButton)
         val backButton = findViewById<Button>(R.id.loginBackButton)
 
@@ -27,16 +26,16 @@ class LoginScreen : AppCompatActivity() {
 
         loginButton.setOnClickListener {
             runBlocking {
-                val (_request, _response, result) = Fuel.get("http://foodtruckfindermi.com/login?email=${emailEdit.text}&password=${passwordEdit.text}")
+                val (_, _, result) = Fuel.get("http://foodtruckfindermi.com/login?email=${emailEdit.text}&password=${passwordEdit.text}")
                     .awaitStringResponseResult()
 
                 result.fold(
                     {data ->
-                        if (data.equals("true")) {
+                        if (data == "true") {
                             val db = DBHelper(this@LoginScreen, null)
                             db.addUser(emailEdit.text.toString(), passwordEdit.text.toString())
                             startIntent()
-                        } else if (data.equals("false")) {
+                        } else if (data == "false") {
                             val snackbar = Snackbar.make(
                                 it, "Incorrect Credentials",
                                 Snackbar.LENGTH_SHORT
@@ -44,7 +43,7 @@ class LoginScreen : AppCompatActivity() {
 
                             snackbar.show()
                         }},
-                    {error -> Log.e("http", "${error}")}
+                    {error -> Log.e("http", "$error")}
                 )
 
             }
@@ -61,7 +60,7 @@ class LoginScreen : AppCompatActivity() {
             startActivity(intent)
         }
     }
-    fun startIntent(){
+    private fun startIntent(){
         val intent = Intent(this, UserScreen::class.java)
         startActivity(intent)
     }
