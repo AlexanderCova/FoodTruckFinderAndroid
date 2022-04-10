@@ -33,69 +33,52 @@
         app:srcCompat="@drawable/ic_back_arrow_48"
         app:tint="@color/white" />
 
+    <Button
+        android:id="@+id/goingButton"
+        android:layout_width="160dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:foregroundTint="@color/white"
+        android:text="@string/interested"
+        app:icon="@drawable/ic_baseline_star_48"
+        app:iconTint="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout4" />
+
     <LinearLayout
         android:id="@+id/linearLayout4"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="1.0"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/layout_outline"
+        android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/eventName">
 
         <TextView
             android:id="@+id/goingAmount"
             android:layout_width="wrap_content"
-            android:layout_height="100dp"
-            android:layout_weight=".5"
-            android:background="@drawable/layout_outline"
-            android:textAlignment="center"
+            android:layout_height="0dp"
+            android:layout_weight=".8"
             android:textSize="50sp"
-            tools:text="Going" />
+            tools:text="RSVP'd" />
 
         <TextView
-            android:id="@+id/maybeAmount"
-            android:layout_width="wrap_content"
-            android:layout_height="100dp"
-            android:layout_weight=".5"
-            android:background="@drawable/layout_outline"
-            android:textAlignment="center"
-            android:textSize="50sp"
-            tools:text="Maybe" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout4">
-
-        <Switch
-            android:id="@+id/goingSwitch"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight=".5"
-            android:drawableStart="@drawable/ic_baseline_check_48"
-            android:showText="false"
-            android:text="@string/going"
-            android:textAlignment="center"
-            android:textAllCaps="false"
-            android:textSize="24sp" />
-
-        <Switch
-            android:id="@+id/maybeSwitch"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight=".5"
-            android:drawableStart="@drawable/ic_baseline_star_48"
-            android:switchTextAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:id="@+id/goingDescLabel"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight=".2"
             android:text="@string/interested"
             android:textAlignment="center"
-            android:textSize="24sp" />
+            android:textSize="18sp"
+            android:textStyle="bold" />
     </LinearLayout>
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -26,6 +26,8 @@
     <string name="unknown_intrested">Interested?</string>
     <string name="going">Going</string>
     <string name="interested">Interested</string>
+    <string name="rsvp">RSVP</string>
+    <string name="rsvp_amount_hint">Group Amount</string>
 
 
 </resources>

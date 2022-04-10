@@ -5,12 +5,12 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.*
+import androidx.core.database.getIntOrNull
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.coroutines.awaitStringResponseResult
 import kotlinx.coroutines.runBlocking
 
 class EventInfoScreen : AppCompatActivity() {
-    @SuppressLint("UseSwitchCompatOrMaterialCode")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_event_info_screen)
@@ -18,10 +18,17 @@ class EventInfoScreen : AppCompatActivity() {
         val name = intent.getStringExtra("name")
 
         val goingLabel = findViewById<TextView>(R.id.goingAmount)
-        val maybeLabel = findViewById<TextView>(R.id.maybeAmount)
         val nameLabel = findViewById<TextView>(R.id.eventName)
-        val goingSwitch = findViewById<Switch>(R.id.goingSwitch)
-        val maybeSwitch = findViewById<Switch>(R.id.maybeSwitch)
+        val goingButton = findViewById<Button>(R.id.goingButton)
+
+        val mainDB = DBHelper(this, null)
+        val cursor = mainDB.getInterest(name!!)
+        val interest = cursor!!.getIntOrNull(0)
+
+        if (interest != null) {
+            goingButton.text = "Uninterested"
+        }
+
 
         runBlocking {
             val (_, _, result) = Fuel.post("http://foodtruckfindermi.com/get-event-info", listOf("name" to name))
@@ -37,11 +44,11 @@ class EventInfoScreen : AppCompatActivity() {
                     val date = eventInfoList[2]
                     val city = eventInfoList[3]
                     val going = eventInfoList[5]
-                    val maybe = eventInfoList[6]
+
 
                     nameLabel.text = name
                     goingLabel.text = going
-                    maybeLabel.text = maybe
+
 
 
                 },
@@ -49,40 +56,19 @@ class EventInfoScreen : AppCompatActivity() {
             )
         }
 
+        goingButton.setOnClickListener {
+            val db = DBHelper(this, null)
 
-        goingSwitch.setOnCheckedChangeListener { compoundButton, b ->
-            if (b == true) {
-                maybeSwitch.isChecked = false
-                val db = DBHelper(this, null)
+            val text = db.setIntrest(name!!)
 
-                if (name != null) {
-                    db.updateInterest(name, 2)
-                }
-            } else {
-                val db = DBHelper(this, null)
+            goingButton.text = text
 
-                if (name != null) {
-                    db.removeInterest(name)
-                }
-            }
+
         }
 
-        maybeSwitch.setOnCheckedChangeListener { compoundButton, b ->
-            if (b == true) {
-                goingSwitch.isChecked = false
-                val db = DBHelper(this, null)
 
-                if (name != null) {
-                    db.updateInterest(name, 1)
-                }
-            } else {
-                val db = DBHelper(this, null)
 
-                if (name != null) {
-                    db.removeInterest(name)
-                }
-            }
-        }
+
 
 
 

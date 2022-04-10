@@ -6,6 +6,7 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import androidx.core.database.getIntOrNull
 
 class DBHelper(context: Context, factory : SQLiteDatabase.CursorFactory?) : SQLiteOpenHelper(context, "User", factory, 1) {
 
@@ -62,47 +63,32 @@ class DBHelper(context: Context, factory : SQLiteDatabase.CursorFactory?) : SQLi
         db.close()
     }
 
-    fun intrestInEvent(intrest : Int, name : String) {
+    fun setIntrest(name : String): String {
         val db = this.writableDatabase
 
         val values = ContentValues()
 
         values.put("name", name)
-        values.put("intrest", intrest)
+        values.put("intrest", 1)
 
-        db.insert("EVENTS", null, values)
+        val cursor = getInterest(name)
+        val interest = cursor!!.getIntOrNull(0)
+
+
+        if (interest == null) {
+            db.insert("EVENTS", null, values)
+            return "Uninterested"
+        } else if(interest == 1) {
+            db.delete("EVENTS", "name=?", arrayOf(name))
+            return "Interested"
+        }
+        return ""
     }
 
     fun getInterest(name: String): Cursor? {
         val db = this.readableDatabase
 
-        return db.rawQuery("SELECT interest FROM EVENTS", null)
-    }
-
-    fun updateInterest(name : String, intrest : Int) {
-        val db = writableDatabase
-        val values = ContentValues()
-        values.put("intrest", intrest)
-
-        val cursor = getInterest(name)
-
-        cursor!!.moveToFirst()
-        val intrest = cursor.getInt(cursor.getColumnIndex("intrest").toInt())
-
-        if (intrest != 0 && intrest != 1 && intrest != 2) {
-            intrestInEvent(intrest, name)
-        } else {
-            db.update("EVENTS", values, "name=?", arrayOf(name))
-        }
-
-
-    }
-
-    fun removeInterest(name : String){
-        val db = this.writableDatabase
-
-        db.delete("EVENTS","name=?", arrayOf(name))
-        db.close()
+        return db.rawQuery("SELECT interest FROM EVENTS WHERE name=$name", null)
     }
 
     companion object {
