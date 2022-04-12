@@ -17,13 +17,16 @@
         android:usesCleartextTraffic="true">
         <activity
             android:name=".EventInfoScreen"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.YouFood.NoActionBar"/>
         <activity
             android:name=".EventsScreen"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.YouFood.NoActionBar"/>
         <activity
             android:name=".SettingsScreen"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.YouFood.NoActionBar"/>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

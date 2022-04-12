@@ -1,5 +1,6 @@
 package com.example.youfood
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -9,6 +10,7 @@ import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.coroutines.awaitStringResponseResult
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.runBlocking
+import java.io.File
 
 
 class LoginScreen : AppCompatActivity() {
@@ -32,8 +34,22 @@ class LoginScreen : AppCompatActivity() {
                 result.fold(
                     {data ->
                         if (data == "true") {
-                            val db = DBHelper(this@LoginScreen, null)
-                            db.addUser(emailEdit.text.toString(), passwordEdit.text.toString())
+                            val file = File(filesDir,"records.txt")
+                            if (file.exists()) {
+                                val record = emailEdit.text.toString() + "\n" + passwordEdit.text.toString()
+
+                                openFileOutput("records.txt", Context.MODE_PRIVATE).use {
+                                    it.write(record.toByteArray())
+                                }
+                            } else {
+                                file.createNewFile()
+                                val record = emailEdit.text.toString() + "\n" + passwordEdit.text.toString()
+
+                                openFileOutput("records.txt", Context.MODE_PRIVATE).use {
+                                    it.write(record.toByteArray())
+                                }
+                            }
+
                             startIntent()
                         } else if (data == "false") {
                             val snackbar = Snackbar.make(

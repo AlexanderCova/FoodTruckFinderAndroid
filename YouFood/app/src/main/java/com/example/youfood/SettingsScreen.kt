@@ -5,6 +5,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.*
+import java.io.File
 
 class SettingsScreen : AppCompatActivity() {
 
@@ -18,18 +19,17 @@ class SettingsScreen : AppCompatActivity() {
         backButton.setOnClickListener{
             val intent = Intent(this, UserScreen::class.java)
             startActivity(intent)
+            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
         }
 
         logoutButton.setOnClickListener {
-            val db = DBHelper(this, null)
-            val cursor = db.getUser()
+            val file = File("records.txt")
+            if (file.delete()) {
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
+            }
 
-            cursor!!.moveToFirst()
-            val email = cursor.getString(cursor.getColumnIndex(DBHelper.EMAIL_COL).toInt())
-            db.deleteUser(email)
 
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
         }
     }
 }

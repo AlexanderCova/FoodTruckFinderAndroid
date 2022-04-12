@@ -27,7 +27,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_back_arrow_48"
-        tools:ignore="ImageContrastCheck" />
+        tools:ignore="ImageContrastCheck"
+        app:tint="@android:color/white" />
 
     <TextView
         android:id="@+id/reviewNameLabel"
@@ -35,6 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:textAlignment="center"
+        android:textColor="@android:color/white"
         android:textSize="34sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

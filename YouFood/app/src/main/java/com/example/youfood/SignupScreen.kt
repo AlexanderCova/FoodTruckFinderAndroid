@@ -1,5 +1,6 @@
 package com.example.youfood
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.PorterDuff
 import android.os.Bundle
@@ -13,6 +14,8 @@ import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.coroutines.awaitStringResponseResult
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.runBlocking
+import java.io.File
+import java.io.FileOutputStream
 
 class SignupScreen : AppCompatActivity(), TextWatcher {
 
@@ -32,28 +35,46 @@ class SignupScreen : AppCompatActivity(), TextWatcher {
 
 
         signupButton.setOnClickListener {
-            runBlocking {
-                val (_, _, result) = Fuel.post("http://foodtruckfindermi.com/signup", listOf("email" to emailEdit.text, "password" to passwordEdit.text))
-                    .awaitStringResponseResult()
+            if (passwordScore == 1) {
+                runBlocking {
+                    val (_, _, result) = Fuel.post(
+                        "http://foodtruckfindermi.com/signup",
+                        listOf("email" to emailEdit.text, "password" to passwordEdit.text)).awaitStringResponseResult()
 
-                result.fold( {data ->
+                    result.fold({ data ->
 
-                    if (data == "true") {
-                        val db = DBHelper(this@SignupScreen, null)
+                        if (data == "true") {
 
-                        db.addUser(emailEdit.text.toString(), passwordEdit.text.toString())
-                        startIntent()
-                    } else if (data == "false") {
-                        val snackbar = Snackbar.make(
-                            it, "Email Already Used",
-                            Snackbar.LENGTH_SHORT
-                        ).setAction("Action", null)
+                            val file = File(filesDir,"records.txt")
+                            if (file.exists()) {
+                                val record = emailEdit.text.toString() + "\n" + passwordEdit.text.toString()
 
-                        snackbar.show()
+                                openFileOutput("records.txt", Context.MODE_PRIVATE).use {
+                                    it.write(record.toByteArray())
+                                }
+                            } else {
+                                file.createNewFile()
 
-                    }
-                             },
-                    {error -> Log.e("http", "$error")})
+                                val record = emailEdit.text.toString() + "\n" + passwordEdit.text.toString()
+
+                                openFileOutput("records.txt", Context.MODE_PRIVATE).use {
+                                    it.write(record.toByteArray())
+                                }
+                            }
+
+                            startIntent()
+                        } else if (data == "false") {
+                            val snackbar = Snackbar.make(
+                                it, "Email Already Used",
+                                Snackbar.LENGTH_SHORT
+                            ).setAction("Action", null)
+
+                            snackbar.show()
+
+                        }
+                    },
+                        { error -> Log.e("http", "$error") })
+                }
             }
         }
 
@@ -160,10 +181,10 @@ class SignupScreen : AppCompatActivity(), TextWatcher {
     companion object {
 
         //This value defines the minimum length for the password
-        internal var REQUIRED_LENGTH = 8
+        internal var REQUIRED_LENGTH = 6
 
         //This value determines the maximum length of the password
-        internal var MAXIMUM_LENGTH = 15
+        internal var MAXIMUM_LENGTH = 10
 
         //This value determines if the password should contain special characters. set it as "false" if you
         //do not require special characters for your password field.
@@ -179,7 +200,7 @@ class SignupScreen : AppCompatActivity(), TextWatcher {
 
         //This value determines if the password should require upper case. Set it as "false" if you
         //do not require upper cases for your password field.
-        internal var REQUIRE_UPPER_CASE = false
+        internal var REQUIRE_UPPER_CASE = true
     }
 }
 
