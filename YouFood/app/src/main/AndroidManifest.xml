@@ -33,10 +33,6 @@
             android:value="AIzaSyAelUprslnEce5ohSClHArWiK5Q-3KGCMs" />
 
         <activity
-            android:name=".ReviewScreen"
-            android:exported="false"
-            android:theme="@style/Theme.YouFood.NoActionBar" />
-        <activity
             android:name=".TruckScreen"
             android:exported="false"
             android:theme="@style/Theme.YouFood.NoActionBar" />

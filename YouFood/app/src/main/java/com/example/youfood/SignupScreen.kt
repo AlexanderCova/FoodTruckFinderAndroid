@@ -112,6 +112,7 @@ class SignupScreen : AppCompatActivity(), TextWatcher {
                 progressBar.progress = 66
                 progressBar.progressDrawable.setColorFilter(resources.getColor(R.color.gold), PorterDuff.Mode.SRC_IN)
                 strengthView.setText(R.string.medium)
+                passwordScore = 1
             }
             3 -> {
                 progressBar.progress = 100

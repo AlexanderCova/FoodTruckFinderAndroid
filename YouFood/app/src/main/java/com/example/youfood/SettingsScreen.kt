@@ -23,7 +23,7 @@ class SettingsScreen : AppCompatActivity() {
         }
 
         logoutButton.setOnClickListener {
-            val file = File("records.txt")
+            val file = File(filesDir, "records.txt")
             if (file.delete()) {
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
