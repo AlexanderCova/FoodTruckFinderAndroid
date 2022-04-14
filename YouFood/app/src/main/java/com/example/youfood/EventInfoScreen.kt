@@ -1,6 +1,7 @@
 package com.example.youfood
 
 import android.annotation.SuppressLint
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -9,6 +10,7 @@ import androidx.core.database.getIntOrNull
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.coroutines.awaitStringResponseResult
 import kotlinx.coroutines.runBlocking
+import java.io.File
 
 class EventInfoScreen : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,17 +23,22 @@ class EventInfoScreen : AppCompatActivity() {
         val nameLabel = findViewById<TextView>(R.id.eventName)
         val goingButton = findViewById<Button>(R.id.goingButton)
 
-        val mainDB = DBHelper(this, null)
-        val cursor = mainDB.getInterest(name!!)
-        val interest = cursor!!.getIntOrNull(0)
+        val file = File(filesDir, "events.txt")
+        if (file.exists()) {
+            val eventList = file.readLines().toMutableList()
+            var eventIndex = eventList.indexOf(name)
 
-        if (interest != null) {
-            goingButton.text = "Uninterested"
+            if (eventIndex != -1) {
+                goingButton.text = getString(R.string.uninterested)
+            } else {
+                goingButton.text = getString(R.string.interested)
+            }
+
         }
 
 
         runBlocking {
-            val (_, _, result) = Fuel.post("http://foodtruckfindermi.com/get-event-info", listOf("name" to name))
+            val (_, _, result) = Fuel.get("http://foodtruckfindermi.com/get-event-info", listOf("name" to name))
                 .awaitStringResponseResult()
 
             result.fold(
@@ -56,23 +63,51 @@ class EventInfoScreen : AppCompatActivity() {
             )
         }
 
+
+
         goingButton.setOnClickListener {
-            val db = DBHelper(this, null)
+            val file = File(filesDir,"events.txt")
 
-            val text = db.setIntrest(name!!)
+            if (file.exists()) {
+                val eventList = file.readLines().toMutableList()
+                var eventIndex = eventList.indexOf(name)
 
-            goingButton.text = text
+                if (eventIndex != -1) {
+                    eventIndex += 1
 
+                    if (eventList[eventIndex] == "0") {
+                        runBlocking {
+                            val (_, _, result) = Fuel.post("http://foodtruckfindermi.com/attending-event", listOf("name" to name))
+                                .awaitStringResponseResult()
 
+                            eventList[eventIndex] = "1"
+                            for(i in eventList) {
+                                file.writeText(i + "\n")
+                            }
+                        }
+                    } else {
+                        runBlocking {
+                            val (_, _, result) = Fuel.post("http://foodtruckfindermi.com/unattending-event", listOf("name" to name))
+                                .awaitStringResponseResult()
+
+                            eventList.removeAt(eventIndex)
+                            eventList.removeAt(eventIndex - 1)
+                            for (i in eventList){
+                                file.writeText(i + "\n")
+                            }
+                        }
+                    }
+                } else {
+                    file.appendText(name + "\n" + "1")
+                }
+
+            } else {
+                file.createNewFile()
+
+                val record = name +"\n" + 1
+                file.appendText(record)
+            }
         }
-
-
-
-
-
-
-
-
 
 
 

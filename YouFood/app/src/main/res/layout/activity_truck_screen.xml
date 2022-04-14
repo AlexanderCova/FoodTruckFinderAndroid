@@ -21,20 +21,28 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:background="@drawable/title_background"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
                 <ImageButton
                     android:id="@+id/truckBackButton"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:layout_gravity="start"
                     android:layout_weight=".8"
                     android:backgroundTint="@android:color/transparent"
                     android:contentDescription="@string/back_hint"
                     app:srcCompat="@drawable/ic_back_arrow_48"
                     app:tint="@color/white"
                     tools:ignore="ImageContrastCheck" />
+
+                <ImageView
+                    android:id="@+id/profilePic"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".8"
+                    app:srcCompat="@drawable/ic_baseline_check_48" />
 
                 <TextView
                     android:id="@+id/truckName"
@@ -47,6 +55,7 @@
                     android:textSize="34sp"
                     tools:ignore="TextContrastCheck"
                     tools:text="TruckName" />
+
             </LinearLayout>
 
             <LinearLayout

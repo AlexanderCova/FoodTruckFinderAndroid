@@ -1,8 +1,10 @@
 package com.example.youfood
 
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.text.method.LinkMovementMethod
+import android.util.Base64
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
@@ -13,8 +15,8 @@ import com.github.kittinunf.fuel.coroutines.awaitStringResponseResult
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.coroutines.runBlocking
-import org.w3c.dom.Text
 import java.io.File
 
 
@@ -48,7 +50,7 @@ class TruckScreen : AppCompatActivity(), OnMapReadyCallback {
             val (_, _, result) = Fuel.get("http://foodtruckfindermi.com/get-truck-info?name=${truckName}").awaitStringResponseResult()
             result.fold(
                 {data ->
-                    var answer = data.split("$")
+                    var answer = data.split("`")
                     answer = answer.drop(1)
                     infoArray = answer.toTypedArray()
 
@@ -136,16 +138,18 @@ class TruckScreen : AppCompatActivity(), OnMapReadyCallback {
         val city = info[1]
         val email = info[2]
         val food = info[4]
-        val website = info[5]
-        val isOpen = info[6]
-        lon = info[5].toDouble()
-        lat = info[6].toDouble()
+        val profile = info[5]
+        val website = info[6]
+        val isOpen = info[7]
+        lon = info[8].toDouble()
+        lat = info[9].toDouble()
 
         val nameLabel = findViewById<TextView>(R.id.truckName)
         val openLabel = findViewById<TextView>(R.id.openLabel)
         val cityLabel = findViewById<TextView>(R.id.cityLabel)
         val foodLabel = findViewById<TextView>(R.id.foodLabel)
         val emailLabel = findViewById<TextView>(R.id.emailLabel)
+        val profileImg = findViewById<ImageView>(R.id.profilePic)
         val websiteLabel = findViewById<TextView>(R.id.websiteLabel)
         val websiteIcon = findViewById<ImageView>(R.id.websiteIcon)
 
@@ -155,6 +159,14 @@ class TruckScreen : AppCompatActivity(), OnMapReadyCallback {
             "1" ->  openLabel.text = getString(R.string.open_hint)
         }
         cityLabel.text = city
+
+        val bytes = Base64.decode(profile, Base64.DEFAULT)
+        val bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+        profileImg.setImageBitmap(bmp)
+
+        Log.i("image", profile)
+        Log.i("image", profile.toByteArray().toString())
+
         if (website == "") {
             websiteLabel.visibility = View.GONE
             websiteIcon.visibility = View.GONE
