@@ -37,10 +37,11 @@
                     app:tint="@color/white"
                     tools:ignore="ImageContrastCheck" />
 
-                <ImageView
+                <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/profilePic"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_gravity="center_horizontal|center_vertical"
                     android:layout_weight=".8"
                     app:srcCompat="@drawable/ic_baseline_check_48" />
 
@@ -189,7 +190,7 @@
             <ListView
                 android:id="@+id/reviewList"
                 android:layout_width="match_parent"
-                android:layout_height="500dp"
+                android:layout_height="0dp"
                 android:layout_marginTop="1dp"
                 android:layout_marginBottom="16dp"
                 android:isScrollContainer="false"
@@ -200,8 +201,8 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/reviewLabel"
-                tools:listitem="@layout/list_item"
-                tools:ignore="NestedScrolling" />
+                tools:ignore="NestedScrolling"
+                tools:listitem="@layout/list_item" />
 
             <LinearLayout
                 android:id="@+id/linearLayout3"

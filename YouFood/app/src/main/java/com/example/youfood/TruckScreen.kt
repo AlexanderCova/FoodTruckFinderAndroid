@@ -149,7 +149,7 @@ class TruckScreen : AppCompatActivity(), OnMapReadyCallback {
         val cityLabel = findViewById<TextView>(R.id.cityLabel)
         val foodLabel = findViewById<TextView>(R.id.foodLabel)
         val emailLabel = findViewById<TextView>(R.id.emailLabel)
-        val profileImg = findViewById<ImageView>(R.id.profilePic)
+        val profileImg = findViewById<CircleImageView>(R.id.profilePic)
         val websiteLabel = findViewById<TextView>(R.id.websiteLabel)
         val websiteIcon = findViewById<ImageView>(R.id.websiteIcon)
 
