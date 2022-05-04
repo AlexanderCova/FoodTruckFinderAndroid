@@ -21,7 +21,7 @@ class LoginScreen : AppCompatActivity() {
         val emailEdit = findViewById<EditText>(R.id.loginEmailEdit)
         val passwordEdit = findViewById<EditText>(R.id.loginPasswordEdit)
         val loginButton = findViewById<Button>(R.id.loginButton)
-        val signupButton = findViewById<Button>(R.id.redirectSignupButton)
+
         val backButton = findViewById<Button>(R.id.loginBackButton)
 
 
@@ -66,10 +66,6 @@ class LoginScreen : AppCompatActivity() {
         }
 
 
-        signupButton.setOnClickListener {
-            val intent = Intent(this, SignupScreen::class.java)
-            startActivity(intent)
-        }
 
         backButton.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)

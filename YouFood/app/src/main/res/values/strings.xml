@@ -39,5 +39,14 @@
     <string name="city_icon">City Icon</string>
     <string name="website_icon">Website Icon</string>
     <string name="email_icon">Email Icon</string>
+    <string name="search_tab">Search Tab</string>
+    <string name="event_tab">Event Tab</string>
+    <string name="account_tab">Account Tab</string>
+    <string name="what_title">What</string>
+    <string name="are_we_eating_today">Are we eating today</string>
+    <string name="where">Where</string>
+    <string name="to_get_food">To get food</string>
+    <string name="open_button">Open Button</string>
+    <string name="rating">Rating</string>
 
 </resources>

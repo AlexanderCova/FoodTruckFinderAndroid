@@ -15,8 +15,8 @@ class EventsScreen : AppCompatActivity() {
         setContentView(R.layout.activity_events_screen)
 
         val eventList = findViewById<ListView>(R.id.eventList)
-        val searchTabButton = findViewById<Button>(R.id.searchTabButton)
-        val nearbyTabButton = findViewById<Button>(R.id.nearbyTabButton)
+        val searchTabButton = findViewById<ImageButton>(R.id.searchTabButton)
+        val accountTabButton = findViewById<ImageButton>(R.id.accountTabButton)
 
         searchTabButton.setOnClickListener {
             val intent = Intent(this, UserScreen::class.java)
@@ -24,10 +24,10 @@ class EventsScreen : AppCompatActivity() {
             overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
         }
 
-        nearbyTabButton.setOnClickListener {
-            val intent = Intent(this, NearbyTrucksScreen::class.java)
+        accountTabButton.setOnClickListener {
+            val intent = Intent(this, AccountScreen::class.java)
             startActivity(intent)
-            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
+
         }
 
 

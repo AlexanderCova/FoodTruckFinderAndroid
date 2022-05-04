@@ -17,17 +17,17 @@ class UserScreen : AppCompatActivity() {
         setContentView(R.layout.activity_user_screen)
 
         //Setup Tab Changing button
-        val nearbyTabButton = findViewById<Button>(R.id.nearbyTabButton)
-        val eventTabButton = findViewById<Button>(R.id.eventTabButton)
+        val accountTabButton = findViewById<ImageButton>(R.id.accountTabButton)
+        val eventTabButton = findViewById<ImageButton>(R.id.eventTabButton)
         val trucksList = findViewById<ListView>(R.id.truckList)
-        val settingsButton = findViewById<ImageButton>(R.id.settingButton)
+
 
 
         setupSearch()
 
 
-        nearbyTabButton.setOnClickListener {
-            val intent = Intent(this, NearbyTrucksScreen::class.java)
+        accountTabButton.setOnClickListener {
+            val intent = Intent(this, AccountScreen::class.java)
             startActivity(intent)
         }
 
@@ -36,10 +36,7 @@ class UserScreen : AppCompatActivity() {
             startActivity(intent)
         }
 
-        settingsButton.setOnClickListener{
-            val intent = Intent(this, SettingsScreen::class.java)
-            startActivity(intent)
-        }
+
 
 
 
@@ -57,19 +54,18 @@ class UserScreen : AppCompatActivity() {
 
     }
 
-    fun array(array: Array<String>) : ArrayAdapter<String> {
-        val truckAdapter: ArrayAdapter<String> = ArrayAdapter(
+    private fun array(array: Array<String>): ArrayAdapter<String> {
+
+        return ArrayAdapter(
             this, android.R.layout.simple_list_item_1,
             array
         )
-
-        return truckAdapter
     }
 
     private fun setupSearch() {
 
         runBlocking {
-            val (request, _response, result) = Fuel.get("http://foodtruckfindermi.com/truck-query")
+            val (_, _, result) = Fuel.get("http://foodtruckfindermi.com/truck-query")
                 .awaitStringResponseResult()
 
             result.fold(
@@ -80,13 +76,13 @@ class UserScreen : AppCompatActivity() {
                     response = response.drop(1)
                     Log.i("request", response.toString())
 
-                    var truck_array = response.toTypedArray()
+                    val truckArray = response.toTypedArray()
 
 
                     val searchView = findViewById<SearchView>(R.id.searchView)
                     val trucksList = findViewById<ListView>(R.id.truckList)
 
-                    val truckAdapter = array(truck_array)
+                    val truckAdapter = array(truckArray)
 
                     trucksList.adapter = truckAdapter
 
@@ -94,7 +90,7 @@ class UserScreen : AppCompatActivity() {
                     searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                         override fun onQueryTextSubmit(query: String?): Boolean {
                             searchView.clearFocus()
-                            if (truck_array.contains(query)) {
+                            if (truckArray.contains(query)) {
                                 truckAdapter.filter.filter(query)
                             }
 
@@ -107,7 +103,7 @@ class UserScreen : AppCompatActivity() {
                         }
                     })
                 },
-                { error -> Log.e("http", "${error}")}
+                { error -> Log.e("http", "$error")}
             )
 
 

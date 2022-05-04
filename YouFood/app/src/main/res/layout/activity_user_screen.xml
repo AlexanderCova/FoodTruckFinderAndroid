@@ -11,101 +11,106 @@
         android:id="@+id/titleText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="30dp"
-        android:text="@string/title_text"
+        android:layout_marginTop="24dp"
+        android:text="@string/what_title"
         android:textAlignment="center"
         android:textSize="48sp"
-        app:layout_constraintBottom_toTopOf="@+id/searchView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.05"
+        app:layout_constraintHorizontal_bias="0.1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <SearchView
-        android:id="@+id/searchView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginBottom="16dp"
-        android:background="@drawable/searchview_background"
-        android:iconifiedByDefault="false"
-        android:queryBackground="@android:color/transparent"
-        android:queryHint="Enter Truck Name"
-        app:layout_constraintBottom_toTopOf="@+id/truckList"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titleText">
-
-    </SearchView>
 
     <ListView
         android:id="@+id/truckList"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/horizontalScrollView"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout6"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/searchView" />
+        app:layout_constraintTop_toBottomOf="@+id/searchView">
 
-    <ImageButton
-        android:id="@+id/settingButton"
-        android:layout_width="wrap_content"
+    </ListView>
+
+    <SearchView
+        android:id="@+id/searchView"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:backgroundTint="@android:color/transparent"
-        android:contentDescription="@string/settings_hint"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/searchview_background"
+        android:iconifiedByDefault="false"
+        android:queryBackground="@android:color/transparent"
+        android:queryHint="Enter Truck Name"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_baseline_settings_48" />
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView2">
 
-    <HorizontalScrollView
-        android:id="@+id/horizontalScrollView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:background="@drawable/layout_outline"
-        android:weightSum=".5"
+    </SearchView>
+
+    <LinearLayout
+        android:id="@+id/linearLayout6"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/title_background"
+        android:orientation="horizontal"
+        android:paddingTop="16dp"
+        android:weightSum="1.0"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <LinearLayout
-            android:id="@+id/linearLayout2"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:weightSum="1.0">
+        <ImageButton
+            android:id="@+id/searchTabButton"
+            android:layout_width="50dp"
+            android:layout_height="55dp"
+            android:layout_marginBottom="16dp"
+            android:layout_weight=".3"
+            android:backgroundTint="@android:color/transparent"
+            android:contentDescription="@string/search_tab"
+            android:minHeight="48dp"
+            android:src="@drawable/ic_baseline_search_24"
+            app:tint="@color/gold"
+            tools:ignore="ImageContrastCheck" />
 
-            <Button
-                android:id="@+id/searchTabButton"
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginBottom="16dp"
-                android:text="@string/tab_text_1" />
+        <ImageButton
+            android:id="@+id/eventTabButton"
+            android:layout_width="50dp"
+            android:layout_height="55dp"
+            android:layout_marginBottom="16dp"
+            android:layout_weight=".4"
+            android:backgroundTint="@android:color/transparent"
+            android:contentDescription="@string/event_tab"
+            android:src="@drawable/ic_baseline_event_24"
+            tools:ignore="ImageContrastCheck" />
 
-            <Button
-                android:id="@+id/nearbyTabButton"
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:text="@string/tab_text_2" />
+        <ImageButton
+            android:id="@+id/accountTabButton"
+            android:layout_width="50dp"
+            android:layout_height="55dp"
+            android:layout_marginBottom="16dp"
+            android:layout_weight=".3"
+            android:backgroundTint="@android:color/transparent"
+            android:contentDescription="@string/account_tab"
+            android:src="@drawable/ic_baseline_account_circle_24"
+            tools:ignore="ImageContrastCheck" />
+    </LinearLayout>
 
-            <Button
-                android:id="@+id/eventTabButton"
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="16dp"
-                android:text="@string/tab_text_3" />
-
-        </LinearLayout>
-    </HorizontalScrollView>
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/are_we_eating_today"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.128"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titleText" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

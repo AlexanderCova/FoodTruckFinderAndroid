@@ -8,14 +8,13 @@ import android.util.Base64
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import com.example.youfood.databinding.ActivityTruckScreenBinding
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.coroutines.awaitStringResponseResult
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.coroutines.runBlocking
 import java.io.File
 
@@ -29,15 +28,19 @@ class TruckScreen : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var reviewBodyArray : Array<String>
     private lateinit var reviewAuthorArray: Array<String>
     private lateinit var reviewDateArray: Array<String>
+    private lateinit var reviewRatingArray: Array<String>
 
     private lateinit var reviewArrayList : ArrayList<Review>
 
+    private lateinit var binding: ActivityTruckScreenBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_truck_screen)
+        binding = ActivityTruckScreenBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         val truckName = intent.getStringExtra("TruckName")
-        val backButton = findViewById<ImageButton>(R.id.truckBackButton)
+        val backButton = binding.truckBackButton
 
         val file = File(filesDir, "records.txt").readLines()
         val email = file[0]
@@ -68,22 +71,24 @@ class TruckScreen : AppCompatActivity(), OnMapReadyCallback {
             overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
         }
 
+        val truckemail = infoArray[2]
+        val reviewList = binding.reviewList
+        val submitReviewButton = binding.submitReviewButton
+        val bodyReviewTextEdit = binding.bodyTextEdit
+        val ratingBar = binding.reviewRatingBar
 
-        val reviewList = findViewById<ListView>(R.id.reviewList)
-        val submitReviewButton = findViewById<Button>(R.id.submitReviewButton)
-        val bodyReviewTextEdit = findViewById<EditText>(R.id.bodyTextEdit)
-        val truckemail = infoArray[1]
+
 
 
 
         runBlocking {
-            val (request, response, result) = Fuel.get("http://foodtruckfindermi.com/review-query?truck=${truckemail}")
+            val (_, _, result) = Fuel.get("http://foodtruckfindermi.com/review-query?truck=${truckemail}")
                 .awaitStringResponseResult()
 
             result.fold(
                 { data ->
-                    var reviewArray = data.split("^")
-                    Log.i("Arrays", reviewArray[0].toString())
+                    val reviewArray = data.split("^")
+
 
                     reviewAuthorArray = reviewArray[0].split("`").drop(1).toTypedArray()
 
@@ -91,25 +96,27 @@ class TruckScreen : AppCompatActivity(), OnMapReadyCallback {
 
                     reviewDateArray = reviewArray[2].split("`").drop(1).toTypedArray()
 
+                    reviewRatingArray = reviewArray[3].split("`").drop(1).toTypedArray()
+
                     reviewArrayList = ArrayList()
 
                     for(i in reviewAuthorArray.indices){
 
-                        val review = Review(reviewAuthorArray[i], reviewBodyArray[i], reviewDateArray[i])
+                        val review = Review(reviewAuthorArray[i], reviewBodyArray[i], reviewDateArray[i], reviewRatingArray[i].toFloat())
                         reviewArrayList.add(review)
                     }
 
                     reviewList.adapter = ReviewAdapter(this@TruckScreen, reviewArrayList)
 
                     var totalHeight = 0
-                    for (i in 0 until reviewList.adapter.getCount()) {
+                    for (i in 0 until reviewList.adapter.count) {
                         val listItem: View = reviewList.adapter.getView(i, null, reviewList)
                         listItem.measure(0, 0)
-                        totalHeight += listItem.getMeasuredHeight() + listItem.getMeasuredHeightAndState() / 2
+                        totalHeight += listItem.measuredHeight + listItem.measuredHeightAndState / 2
                     }
-                    val params: ViewGroup.LayoutParams = reviewList.getLayoutParams()
-                    params.height = totalHeight + reviewList.getDividerHeight() * (reviewList.adapter.getCount() - 1)
-                    reviewList.setLayoutParams(params)
+                    val params: ViewGroup.LayoutParams = reviewList.layoutParams
+                    params.height = totalHeight + reviewList.dividerHeight * (reviewList.adapter.count - 1)
+                    reviewList.layoutParams = params
                     reviewList.requestLayout()
 
                 },
@@ -119,9 +126,9 @@ class TruckScreen : AppCompatActivity(), OnMapReadyCallback {
 
         submitReviewButton.setOnClickListener {
             runBlocking {
-                val (request, response, result) = Fuel.post(
+                val (_, _, _) = Fuel.post(
                     "http://foodtruckfindermi.com/create-review",
-                    listOf("author" to email, "body" to bodyReviewTextEdit.text, "truck" to truckemail)
+                    listOf("author" to email, "body" to bodyReviewTextEdit.text, "truck" to truckemail, "rating" to ratingBar.rating)
                 ).awaitStringResponseResult()
             }
         }
@@ -143,29 +150,41 @@ class TruckScreen : AppCompatActivity(), OnMapReadyCallback {
         val isOpen = info[7]
         lon = info[8].toDouble()
         lat = info[9].toDouble()
+        val rating = info[10]
 
-        val nameLabel = findViewById<TextView>(R.id.truckName)
-        val openLabel = findViewById<TextView>(R.id.openLabel)
-        val cityLabel = findViewById<TextView>(R.id.cityLabel)
-        val foodLabel = findViewById<TextView>(R.id.foodLabel)
-        val emailLabel = findViewById<TextView>(R.id.emailLabel)
-        val profileImg = findViewById<CircleImageView>(R.id.profilePic)
-        val websiteLabel = findViewById<TextView>(R.id.websiteLabel)
-        val websiteIcon = findViewById<ImageView>(R.id.websiteIcon)
+
+        val nameLabel = binding.truckName
+        val openLabel = binding.openLabel
+        val cityLabel = binding.cityLabel
+        val foodLabel = binding.foodLabel
+        val emailLabel = binding.emailLabel
+        val profileImg = binding.profilePic
+        val websiteLabel = binding.websiteLabel
+        val websiteIcon = binding.websiteIcon
+        val ratingBar = binding.ratingBar
 
         nameLabel.text = name
+        Log.i("rating", rating)
+
+        if (rating != "" && rating != "None") {
+            ratingBar.rating = rating.toFloat()
+            Log.i("rating", rating)
+        } else {
+            ratingBar.rating = 0.0F
+        }
+
+
         when (isOpen) {
             "0" ->  openLabel.text = getString(R.string.closed_hint)
             "1" ->  openLabel.text = getString(R.string.open_hint)
         }
+
         cityLabel.text = city
 
         val bytes = Base64.decode(profile, Base64.DEFAULT)
         val bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
         profileImg.setImageBitmap(bmp)
 
-        Log.i("image", profile)
-        Log.i("image", profile.toByteArray().toString())
 
         if (website == "") {
             websiteLabel.visibility = View.GONE

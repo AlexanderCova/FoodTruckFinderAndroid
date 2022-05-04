@@ -25,6 +25,7 @@ android {
     }
     buildFeatures {
         viewBinding = true
+
     }
 
     compileOptions {
@@ -47,8 +48,8 @@ dependencies {
     implementation 'com.github.kittinunf.fuel:fuel:2.3.1'
     implementation 'com.github.kittinunf.fuel:fuel-android:2.3.1'
     implementation 'com.github.kittinunf.fuel:fuel-coroutines:2.3.1'
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0"
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1-native-mt'
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1-native-mt"
 
     implementation 'com.android.volley:volley:1.2.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
