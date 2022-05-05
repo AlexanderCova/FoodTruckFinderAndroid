@@ -126,10 +126,21 @@ class TruckScreen : AppCompatActivity(), OnMapReadyCallback {
 
         submitReviewButton.setOnClickListener {
             runBlocking {
-                val (_, _, _) = Fuel.post(
+                val (_, _, result) = Fuel.post(
                     "http://foodtruckfindermi.com/create-review",
                     listOf("author" to email, "body" to bodyReviewTextEdit.text, "truck" to truckemail, "rating" to ratingBar.rating)
                 ).awaitStringResponseResult()
+
+                result.fold(
+                    {data ->
+                        if (data == "true") {
+                            bodyReviewTextEdit.text.clear()
+                            ratingBar.rating = 0F
+                        }
+                    },
+                    {error -> Log.e("http", "$error")}
+                )
+
             }
         }
 

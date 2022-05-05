@@ -9,6 +9,7 @@ import android.widget.*
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.coroutines.awaitStringResponseResult
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.runBlocking
 import java.io.File
 
@@ -18,8 +19,8 @@ class LoginScreen : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login_screen)
 
-        val emailEdit = findViewById<EditText>(R.id.loginEmailEdit)
-        val passwordEdit = findViewById<EditText>(R.id.loginPasswordEdit)
+        val emailEdit = findViewById<TextInputEditText>(R.id.loginEmailEdit)
+        val passwordEdit = findViewById<TextInputEditText>(R.id.loginPasswordEdit)
         val loginButton = findViewById<Button>(R.id.loginButton)
 
         val backButton = findViewById<Button>(R.id.loginBackButton)

@@ -3,7 +3,9 @@ package com.example.youfood
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import  android.os.Bundle
+import android.widget.Button
 import android.widget.ImageButton
+import java.io.File
 
 
 class AccountScreen : AppCompatActivity() {
@@ -13,6 +15,7 @@ class AccountScreen : AppCompatActivity() {
 
         val searchTabButton = findViewById<ImageButton>(R.id.searchTabButton)
         val eventTabButton = findViewById<ImageButton>(R.id.eventTabButton)
+        val logoutButton = findViewById<Button>(R.id.logoutButton)
 
 
         searchTabButton.setOnClickListener {
@@ -25,6 +28,16 @@ class AccountScreen : AppCompatActivity() {
             val intent = Intent(this, EventsScreen::class.java)
             startActivity(intent)
             overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
+        }
+
+        logoutButton.setOnClickListener {
+            val file = File(filesDir, "records.txt")
+            if (file.delete()) {
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
+            }
+
+
         }
     }
 }
