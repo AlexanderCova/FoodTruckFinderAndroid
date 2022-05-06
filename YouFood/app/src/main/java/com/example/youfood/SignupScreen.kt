@@ -27,7 +27,7 @@ class SignupScreen : AppCompatActivity(), TextWatcher {
         val signupButton = findViewById<Button>(R.id.signupButton)
         val emailEdit = findViewById<EditText>(R.id.signupEmailEdit)
         val passwordEdit = findViewById<EditText>(R.id.signupPasswordEdit)
-        val backButton = findViewById<Button>(R.id.signupBackButton)
+        val backButton = findViewById<Button>(R.id.loginBackButton)
 
         passwordEdit.addTextChangedListener(this)
 
