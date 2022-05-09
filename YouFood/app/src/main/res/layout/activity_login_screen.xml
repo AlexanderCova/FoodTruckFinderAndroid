@@ -59,7 +59,8 @@
                 android:minHeight="48dp"
                 android:padding="16dp"
                 android:textColorHint="#616161"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                tools:ignore="TextContrastCheck" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -76,7 +77,9 @@
                 android:hint="@string/password_hint"
                 android:inputType="textPassword"
                 android:padding="16dp"
-                android:textSize="18sp" />
+                android:textColorHint="#616161"
+                android:textSize="18sp"
+                tools:ignore="TextContrastCheck" />
         </com.google.android.material.textfield.TextInputLayout>
 
 

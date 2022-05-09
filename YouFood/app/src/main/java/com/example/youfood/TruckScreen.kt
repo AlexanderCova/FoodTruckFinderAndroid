@@ -15,6 +15,7 @@ import com.github.kittinunf.fuel.coroutines.awaitStringResponseResult
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import kotlinx.android.synthetic.main.activity_truck_screen.*
 import kotlinx.coroutines.runBlocking
 import java.io.File
 
@@ -167,6 +168,7 @@ class TruckScreen : AppCompatActivity(), OnMapReadyCallback {
         val nameLabel = binding.truckName
         val openLabel = binding.openLabel
         val cityLabel = binding.cityLabel
+        val cityIcon = binding.cityIcon
         val foodLabel = binding.foodLabel
         val emailLabel = binding.emailLabel
         val profileImg = binding.profilePic
@@ -195,6 +197,15 @@ class TruckScreen : AppCompatActivity(), OnMapReadyCallback {
         val bytes = Base64.decode(profile, Base64.DEFAULT)
         val bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
         profileImg.setImageBitmap(bmp)
+
+        if (city == ""){
+            cityLabel.visibility = View.GONE
+            cityIcon.visibility = View.GONE
+        } else {
+            cityLabel.text = city
+            cityLabel.visibility = View.VISIBLE
+            cityIcon.visibility = View.VISIBLE
+        }
 
 
         if (website == "") {
