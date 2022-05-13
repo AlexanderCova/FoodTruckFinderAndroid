@@ -1,12 +1,15 @@
 package com.example.youfood
 
 import android.content.Intent
+import android.graphics.PorterDuff
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.coroutines.awaitStringResponseResult
+import kotlinx.android.synthetic.main.activity_user_screen.*
 import kotlinx.coroutines.runBlocking
 
 class UserScreen : AppCompatActivity() {
@@ -16,24 +19,63 @@ class UserScreen : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_screen)
 
+        val truckFragment = TrucksFragment()
+        val eventFragment = EventFragment()
+        val accountFragment = AccountFragment()
+
+        supportFragmentManager.beginTransaction().apply {
+            replace(R.id.flFragment, truckFragment)
+            addToBackStack(null)
+            commit()
+        }
+
+
+
         //Setup Tab Changing button
+        val searchTabButton = findViewById<ImageButton>(R.id.searchTabButton)
         val accountTabButton = findViewById<ImageButton>(R.id.accountTabButton)
         val eventTabButton = findViewById<ImageButton>(R.id.eventTabButton)
-        val trucksList = findViewById<ListView>(R.id.truckList)
 
+        searchTabButton.setOnClickListener {
+            supportFragmentManager.beginTransaction().apply {
+                replace(R.id.flFragment, truckFragment)
+                addToBackStack(null)
+                commit()
+            }
 
-
-        setupSearch()
-
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                searchTabButton.setColorFilter(this.getColor(R.color.gold), PorterDuff.Mode.SRC_IN)
+                accountTabButton.setColorFilter(this.getColor(R.color.black), PorterDuff.Mode.SRC_IN)
+                eventTabButton.setColorFilter(this.getColor(R.color.black), PorterDuff.Mode.SRC_IN)
+            }
+        }
 
         accountTabButton.setOnClickListener {
-            val intent = Intent(this, AccountScreen::class.java)
-            startActivity(intent)
+            supportFragmentManager.beginTransaction().apply {
+                replace(R.id.flFragment, accountFragment)
+                addToBackStack(null)
+                commit()
+            }
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                searchTabButton.setColorFilter(this.getColor(R.color.black), PorterDuff.Mode.SRC_IN)
+                accountTabButton.setColorFilter(this.getColor(R.color.gold), PorterDuff.Mode.SRC_IN)
+                eventTabButton.setColorFilter(this.getColor(R.color.black), PorterDuff.Mode.SRC_IN)
+            }
         }
 
         eventTabButton.setOnClickListener {
-            val intent = Intent(this, EventsScreen::class.java)
-            startActivity(intent)
+            supportFragmentManager.beginTransaction().apply {
+                replace(R.id.flFragment, eventFragment)
+                addToBackStack(null)
+                commit()
+            }
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                searchTabButton.setColorFilter(this.getColor(R.color.black), PorterDuff.Mode.SRC_IN)
+                accountTabButton.setColorFilter(this.getColor(R.color.black), PorterDuff.Mode.SRC_IN)
+                eventTabButton.setColorFilter(this.getColor(R.color.gold), PorterDuff.Mode.SRC_IN)
+            }
         }
 
 
@@ -41,75 +83,12 @@ class UserScreen : AppCompatActivity() {
 
 
 
-        trucksList.setOnItemClickListener { parent, _, i, _ ->
-            val truckName = parent.getItemAtPosition(i) as String
-            val intent = Intent(this, TruckScreen::class.java)
-            intent.putExtra("TruckName", truckName)
-            startActivity(intent)
-        }
-
 
 
 
 
     }
 
-    private fun array(array: Array<String>): ArrayAdapter<String> {
 
-        return ArrayAdapter(
-            this, android.R.layout.simple_list_item_1,
-            array
-        )
-    }
-
-    private fun setupSearch() {
-
-        runBlocking {
-            val (_, _, result) = Fuel.get("http://foodtruckfindermi.com/truck-query")
-                .awaitStringResponseResult()
-
-            result.fold(
-                { data ->
-
-
-                    var response = data.split("$")
-                    response = response.drop(1)
-                    Log.i("request", response.toString())
-
-                    val truckArray = response.toTypedArray()
-
-
-                    val searchView = findViewById<SearchView>(R.id.searchView)
-                    val trucksList = findViewById<ListView>(R.id.truckList)
-
-                    val truckAdapter = array(truckArray)
-
-                    trucksList.adapter = truckAdapter
-
-
-                    searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                        override fun onQueryTextSubmit(query: String?): Boolean {
-                            searchView.clearFocus()
-                            if (truckArray.contains(query)) {
-                                truckAdapter.filter.filter(query)
-                            }
-
-                            return false
-                        }
-
-                        override fun onQueryTextChange(newText: String?): Boolean {
-                            truckAdapter.filter.filter(newText)
-                            return false
-                        }
-                    })
-                },
-                { error -> Log.e("http", "$error")}
-            )
-
-
-        }
-
-
-    }
 
 }

@@ -1,35 +1,32 @@
 package com.example.youfood
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.*
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.SearchView
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.coroutines.awaitStringResponseResult
+import kotlinx.android.synthetic.main.fragment_event.*
 import kotlinx.coroutines.runBlocking
 
-class EventsScreen : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_events_screen)
 
-        val eventList = findViewById<ListView>(R.id.eventList)
-        val searchTabButton = findViewById<ImageButton>(R.id.searchTabButton)
-        val accountTabButton = findViewById<ImageButton>(R.id.accountTabButton)
+class EventFragment : Fragment() {
 
-        searchTabButton.setOnClickListener {
-            val intent = Intent(this, UserScreen::class.java)
-            startActivity(intent)
-            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
-        }
 
-        accountTabButton.setOnClickListener {
-            val intent = Intent(this, AccountScreen::class.java)
-            startActivity(intent)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_event, container, false)
+    }
 
-        }
-
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         runBlocking {
             val (_, _, result) = Fuel.get("http://foodtruckfindermi.com/event-query")
@@ -41,7 +38,7 @@ class EventsScreen : AppCompatActivity() {
                     val eventNameArray = eventArray[0].split("`").drop(1)
                     val eventDescArray = eventArray[1].split("`").drop(1)
                     val eventDateArray = eventArray[2].split("`").drop(1)
-                    val searchView = findViewById<SearchView>(R.id.searchView)
+                    val searchView = searchView
 
                     val eventArrayList = ArrayList<Event>()
 
@@ -49,10 +46,10 @@ class EventsScreen : AppCompatActivity() {
                         val event = Event(eventNameArray[i], eventDescArray[i], eventDateArray[i])
                         eventArrayList.add(event)
                     }
-                    eventList.adapter = EventAdapter(this@EventsScreen, eventArrayList)
+                    eventList.adapter = EventAdapter(requireActivity(), eventArrayList)
                     eventList.setOnItemClickListener { _, _, position, _ ->
 
-                        val intent = Intent(this@EventsScreen, EventInfoScreen::class.java)
+                        val intent = Intent(requireActivity(), EventInfoScreen::class.java)
                         intent.putExtra("name", eventNameArray[position])
                         startActivity(intent)
 
@@ -66,7 +63,7 @@ class EventsScreen : AppCompatActivity() {
                             for (i in eventNameArray.indices) {
                                 if (eventNameArray[i].contains(query.toString())) {
                                     newEventList.add(Event(eventNameArray[i], eventDescArray[i], eventDateArray[i]))
-                                    eventList.adapter = EventAdapter(this@EventsScreen, newEventList)
+                                    eventList.adapter = EventAdapter(requireActivity(), newEventList)
                                 }
                             }
                             return false
@@ -78,7 +75,7 @@ class EventsScreen : AppCompatActivity() {
                             for (i in eventNameArray.indices) {
                                 if (eventNameArray[i].contains(newText.toString())) {
                                     newEventList.add(Event(eventNameArray[i], eventDescArray[i], eventDateArray[i]))
-                                    eventList.adapter = EventAdapter(this@EventsScreen, newEventList)
+                                    eventList.adapter = EventAdapter(requireActivity(), newEventList)
                                 }
                             }
                             return false
@@ -91,4 +88,6 @@ class EventsScreen : AppCompatActivity() {
             )
         }
     }
+
+
 }

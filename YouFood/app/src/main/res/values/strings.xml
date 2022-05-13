@@ -48,5 +48,7 @@
     <string name="to_get_food">To get food</string>
     <string name="open_button">Open Button</string>
     <string name="rating">Rating</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
