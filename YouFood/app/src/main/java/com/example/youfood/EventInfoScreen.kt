@@ -23,6 +23,9 @@ class EventInfoScreen : AppCompatActivity() {
         val nameLabel = findViewById<TextView>(R.id.eventName)
         val goingButton = findViewById<Button>(R.id.goingButton)
 
+        val accountFile = File(filesDir, "records.txt").readLines()
+        val email = accountFile[0]
+
         val file = File(filesDir, "events.txt")
         if (file.exists()) {
             val eventList = file.readLines().toMutableList()
@@ -35,6 +38,8 @@ class EventInfoScreen : AppCompatActivity() {
             }
 
         }
+
+
 
 
         runBlocking {
@@ -77,7 +82,7 @@ class EventInfoScreen : AppCompatActivity() {
 
                     if (eventList[eventIndex] == "0") {
                         runBlocking {
-                            val (_, _, result) = Fuel.post("http://foodtruckfindermi.com/attending-event", listOf("name" to name))
+                            val (_, _, result) = Fuel.post("http://foodtruckfindermi.com/attending-event", listOf("name" to name, "account" to email))
                                 .awaitStringResponseResult()
 
                             eventList[eventIndex] = "1"
@@ -102,10 +107,17 @@ class EventInfoScreen : AppCompatActivity() {
                 }
 
             } else {
-                file.createNewFile()
+                runBlocking {
+                    file.createNewFile()
 
-                val record = name +"\n" + 1
-                file.appendText(record)
+                    val (_, _, result) = Fuel.post(
+                        "http://foodtruckfindermi.com/attending-event",
+                        listOf("name" to name, "account" to email)
+                    ).awaitStringResponseResult()
+
+                    val record = name + "\n" + 1
+                    file.appendText(record)
+                }
             }
         }
 

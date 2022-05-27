@@ -9,22 +9,14 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/new_icon"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/new_icon_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.YouFood"
         android:usesCleartextTraffic="true">
         <activity
             android:name=".EventInfoScreen"
-            android:exported="false"
-            android:theme="@style/Theme.YouFood.NoActionBar"/>
-        <activity
-            android:name=".EventsScreen"
-            android:exported="false"
-            android:theme="@style/Theme.YouFood.NoActionBar"/>
-        <activity
-            android:name=".SettingsScreen"
             android:exported="false"
             android:theme="@style/Theme.YouFood.NoActionBar"/>
 
@@ -37,13 +29,8 @@
             android:exported="false"
             android:theme="@style/Theme.YouFood.NoActionBar" />
         <activity
-            android:name=".AccountScreen"
-            android:exported="false"
-            android:theme="@style/Theme.YouFood.NoActionBar" />
-        <activity
             android:name=".UserScreen"
             android:exported="false"
-            android:label="@string/title_activity_user_screen"
             android:theme="@style/Theme.YouFood.NoActionBar" />
         <activity
             android:name=".SignupScreen"

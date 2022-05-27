@@ -9,6 +9,11 @@ import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.viewpager.widget.ViewPager
+import com.example.youfood.Adapter.PagerAdapter
+import com.example.youfood.Adapter.ReviewAdapter
+import com.example.youfood.Adapter.TruckPagerAdapter
+import com.example.youfood.DataClasses.Review
 import com.example.youfood.databinding.ActivityTruckScreenBinding
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.coroutines.awaitStringResponseResult
@@ -16,14 +21,15 @@ import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.activity_truck_screen.*
+import kotlinx.android.synthetic.main.fragment_truck_reviews.*
 import kotlinx.coroutines.runBlocking
 import java.io.File
 
 
 class TruckScreen : AppCompatActivity(), OnMapReadyCallback {
 
-    private var lon : Double = 0.0
-    private var lat : Double = 0.0
+    var lon : Double = 0.0
+    var lat : Double = 0.0
     private lateinit var infoArray : Array<String>
 
     private lateinit var reviewBodyArray : Array<String>
@@ -35,18 +41,29 @@ class TruckScreen : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var binding: ActivityTruckScreenBinding
 
+    lateinit var truckemail : String
+    lateinit var truckName : String
+
+
+
+    private lateinit var mPagerAdapter: TruckPagerAdapter
+    private lateinit var mPagerViewAdapter: TruckPagerAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityTruckScreenBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val truckName = intent.getStringExtra("TruckName")
+        truckName = intent.getStringExtra("TruckName") as String
         val backButton = binding.truckBackButton
 
         val file = File(filesDir, "records.txt").readLines()
         val email = file[0]
 
-        Log.i("Email", email)
+        val mViewPager = binding.truckViewPager
+        val infoTabButton = binding.infoTabButton
+        val mapTabButton = binding.mapTabButton
+        val reviewsTabButton = binding.reviewsTabButton
 
 
 
@@ -72,108 +89,56 @@ class TruckScreen : AppCompatActivity(), OnMapReadyCallback {
             overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
         }
 
-        val truckemail = infoArray[2]
-        val reviewList = binding.reviewList
-        val submitReviewButton = binding.submitReviewButton
-        val bodyReviewTextEdit = binding.bodyTextEdit
-        val ratingBar = binding.reviewRatingBar
+        truckemail = infoArray[2]
 
 
 
-
-
-        runBlocking {
-            val (_, _, result) = Fuel.get("http://foodtruckfindermi.com/review-query?truck=${truckemail}")
-                .awaitStringResponseResult()
-
-            result.fold(
-                { data ->
-                    val reviewArray = data.split("^")
-
-
-                    reviewAuthorArray = reviewArray[0].split("`").drop(1).toTypedArray()
-
-                    reviewBodyArray = reviewArray[1].split("`").drop(1).toTypedArray()
-
-                    reviewDateArray = reviewArray[2].split("`").drop(1).toTypedArray()
-
-                    reviewRatingArray = reviewArray[3].split("`").drop(1).toTypedArray()
-
-                    reviewArrayList = ArrayList()
-
-                    for(i in reviewAuthorArray.indices){
-
-                        val review = Review(reviewAuthorArray[i], reviewBodyArray[i], reviewDateArray[i], reviewRatingArray[i].toFloat())
-                        reviewArrayList.add(review)
-                    }
-
-                    reviewList.adapter = ReviewAdapter(this@TruckScreen, reviewArrayList)
-
-                    var totalHeight = 0
-                    for (i in 0 until reviewList.adapter.count) {
-                        val listItem: View = reviewList.adapter.getView(i, null, reviewList)
-                        listItem.measure(0, 0)
-                        totalHeight += listItem.measuredHeight + listItem.measuredHeightAndState / 2
-                    }
-                    val params: ViewGroup.LayoutParams = reviewList.layoutParams
-                    params.height = totalHeight + reviewList.dividerHeight * (reviewList.adapter.count - 1)
-                    reviewList.layoutParams = params
-                    reviewList.requestLayout()
-
-                },
-                { error -> Log.e("http", "$error") })
+        infoTabButton.setOnClickListener {
+            mViewPager.currentItem = 0
         }
 
+        mapTabButton.setOnClickListener {
+            mViewPager.currentItem = 1
+        }
 
-        submitReviewButton.setOnClickListener {
-            runBlocking {
-                val (_, _, result) = Fuel.post(
-                    "http://foodtruckfindermi.com/create-review",
-                    listOf("author" to email, "body" to bodyReviewTextEdit.text, "truck" to truckemail, "rating" to ratingBar.rating)
-                ).awaitStringResponseResult()
+        reviewsTabButton.setOnClickListener {
+            mViewPager.currentItem = 2
+        }
 
-                result.fold(
-                    {data ->
-                        if (data == "true") {
-                            bodyReviewTextEdit.text.clear()
-                            ratingBar.rating = 0F
-                        }
-                    },
-                    {error -> Log.e("http", "$error")}
-                )
+        mPagerViewAdapter = TruckPagerAdapter(supportFragmentManager)
+        mViewPager.adapter = mPagerViewAdapter
+        mViewPager.offscreenPageLimit = 3
 
+
+        mViewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            override fun onPageScrolled(
+                position: Int,
+                positionOffset: Float,
+                positionOffsetPixels: Int
+            ) {
             }
-        }
 
+            override fun onPageSelected(position: Int) {
+                changeTabs(position)
+            }
 
+            override fun onPageScrollStateChanged(state: Int) {}
+        })
 
-
-        val map = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
-        map.getMapAsync(this)
+        mViewPager.currentItem = 0
+        infoTabButton.setBackgroundColor(resources.getColor(R.color.gold))
     }
 
     private fun loadScreen(info : Array<String>) {
         val name = info[0]
-        val city = info[1]
-        val email = info[2]
-        val food = info[4]
         val profile = info[5]
-        val website = info[6]
-        val isOpen = info[7]
         lon = info[8].toDouble()
         lat = info[9].toDouble()
         val rating = info[10]
 
 
         val nameLabel = binding.truckName
-        val openLabel = binding.openLabel
-        val cityLabel = binding.cityLabel
-        val cityIcon = binding.cityIcon
-        val foodLabel = binding.foodLabel
-        val emailLabel = binding.emailLabel
         val profileImg = binding.profilePic
-        val websiteLabel = binding.websiteLabel
-        val websiteIcon = binding.websiteIcon
         val ratingBar = binding.ratingBar
 
         nameLabel.text = name
@@ -187,39 +152,18 @@ class TruckScreen : AppCompatActivity(), OnMapReadyCallback {
         }
 
 
-        when (isOpen) {
-            "0" ->  openLabel.text = getString(R.string.closed_hint)
-            "1" ->  openLabel.text = getString(R.string.open_hint)
-        }
 
-        cityLabel.text = city
+
+
 
         val bytes = Base64.decode(profile, Base64.DEFAULT)
         val bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
         profileImg.setImageBitmap(bmp)
 
-        if (city == ""){
-            cityLabel.visibility = View.GONE
-            cityIcon.visibility = View.GONE
-        } else {
-            cityLabel.text = city
-            cityLabel.visibility = View.VISIBLE
-            cityIcon.visibility = View.VISIBLE
-        }
 
 
-        if (website == "") {
-            websiteLabel.visibility = View.GONE
-            websiteIcon.visibility = View.GONE
-        } else {
-            websiteLabel.text = "<a href='${website}'>Our Website</a>"
-            websiteLabel.movementMethod = LinkMovementMethod.getInstance()
-            websiteLabel.visibility = View.VISIBLE
-            websiteIcon.visibility = View.VISIBLE
-        }
 
-        foodLabel.text = food
-        emailLabel.text = email
+
 
     }
 
@@ -229,6 +173,32 @@ class TruckScreen : AppCompatActivity(), OnMapReadyCallback {
                 .position(LatLng(lat, lon)))
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(LatLng(lat, lon)))
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(lat, lon), 15F))
+
+    }
+
+    private fun changeTabs(position: Int) {
+        val infoTabButton = binding.infoTabButton
+        val mapTabButton = binding.mapTabButton
+        val reviewsTabButton = binding.reviewsTabButton
+
+
+        if (position == 0) {
+            infoTabButton.setBackgroundColor(resources.getColor(R.color.gold))
+            mapTabButton.setBackgroundColor(resources.getColor(R.color.gray))
+            reviewsTabButton.setBackgroundColor(resources.getColor(R.color.gray))
+
+        }
+        if (position == 1) {
+            infoTabButton.setBackgroundColor(resources.getColor(R.color.gray))
+            mapTabButton.setBackgroundColor(resources.getColor(R.color.gold))
+            reviewsTabButton.setBackgroundColor(resources.getColor(R.color.gray))
+        }
+        if (position == 2) {
+            infoTabButton.setBackgroundColor(resources.getColor(R.color.gray))
+            mapTabButton.setBackgroundColor(resources.getColor(R.color.gray))
+            reviewsTabButton.setBackgroundColor(resources.getColor(R.color.gold))
+        }
+
 
     }
 }

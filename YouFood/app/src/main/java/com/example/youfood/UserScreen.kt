@@ -7,6 +7,9 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.content.res.AppCompatResources
+import com.example.youfood.Adapter.PagerAdapter
+import androidx.viewpager.widget.ViewPager
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.coroutines.awaitStringResponseResult
 import kotlinx.android.synthetic.main.activity_user_screen.*
@@ -14,74 +17,55 @@ import kotlinx.coroutines.runBlocking
 
 class UserScreen : AppCompatActivity() {
 
+    private lateinit var mViewPager: ViewPager
+    private lateinit var searchBtn : ImageButton
+    private lateinit var eventBtn : ImageButton
+    private lateinit var mPagerAdapter: PagerAdapter
+
+    private lateinit var mPagerViewAdapter: PagerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_screen)
 
-        val truckFragment = TrucksFragment()
-        val eventFragment = EventFragment()
-        val accountFragment = AccountFragment()
+        mViewPager = findViewById(R.id.mViewPager)
+        searchBtn = findViewById(R.id.searchBtn)
+        eventBtn = findViewById(R.id.eventBtn)
 
-        supportFragmentManager.beginTransaction().apply {
-            replace(R.id.flFragment, truckFragment)
-            addToBackStack(null)
-            commit()
+        searchBtn.setOnClickListener {
+            mViewPager.currentItem = 0
+        }
+
+        eventBtn.setOnClickListener {
+            mViewPager.currentItem = 1
         }
 
 
+        mPagerViewAdapter = PagerAdapter(supportFragmentManager)
+        mViewPager.adapter = mPagerViewAdapter
+        mViewPager.offscreenPageLimit = 2
 
-        //Setup Tab Changing button
-        val searchTabButton = findViewById<ImageButton>(R.id.searchTabButton)
-        val accountTabButton = findViewById<ImageButton>(R.id.accountTabButton)
-        val eventTabButton = findViewById<ImageButton>(R.id.eventTabButton)
 
-        searchTabButton.setOnClickListener {
-            supportFragmentManager.beginTransaction().apply {
-                replace(R.id.flFragment, truckFragment)
-                addToBackStack(null)
-                commit()
+        mViewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            override fun onPageScrolled(
+                position: Int,
+                positionOffset: Float,
+                positionOffsetPixels: Int
+            ) {
             }
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                searchTabButton.setColorFilter(this.getColor(R.color.gold), PorterDuff.Mode.SRC_IN)
-                accountTabButton.setColorFilter(this.getColor(R.color.black), PorterDuff.Mode.SRC_IN)
-                eventTabButton.setColorFilter(this.getColor(R.color.black), PorterDuff.Mode.SRC_IN)
-            }
-        }
-
-        accountTabButton.setOnClickListener {
-            supportFragmentManager.beginTransaction().apply {
-                replace(R.id.flFragment, accountFragment)
-                addToBackStack(null)
-                commit()
+            override fun onPageSelected(position: Int) {
+                changeTabs(position)
             }
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                searchTabButton.setColorFilter(this.getColor(R.color.black), PorterDuff.Mode.SRC_IN)
-                accountTabButton.setColorFilter(this.getColor(R.color.gold), PorterDuff.Mode.SRC_IN)
-                eventTabButton.setColorFilter(this.getColor(R.color.black), PorterDuff.Mode.SRC_IN)
-            }
-        }
-
-        eventTabButton.setOnClickListener {
-            supportFragmentManager.beginTransaction().apply {
-                replace(R.id.flFragment, eventFragment)
-                addToBackStack(null)
-                commit()
-            }
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                searchTabButton.setColorFilter(this.getColor(R.color.black), PorterDuff.Mode.SRC_IN)
-                accountTabButton.setColorFilter(this.getColor(R.color.black), PorterDuff.Mode.SRC_IN)
-                eventTabButton.setColorFilter(this.getColor(R.color.gold), PorterDuff.Mode.SRC_IN)
-            }
-        }
+            override fun onPageScrollStateChanged(state: Int) {}
+        })
 
 
 
 
-
+        mViewPager.currentItem = 0
+        searchBtn.setBackgroundResource(R.drawable.selected_tab_overlay)
 
 
 
@@ -89,6 +73,21 @@ class UserScreen : AppCompatActivity() {
 
     }
 
+    private fun changeTabs(position: Int) {
 
 
+        if (position == 0) {
+            searchBtn.setBackgroundResource(R.drawable.selected_tab_overlay)
+            eventBtn.setBackgroundResource(0)
+
+
+        }
+        if (position == 1) {
+            searchBtn.setBackgroundResource(0)
+            eventBtn.setBackgroundResource(R.drawable.selected_tab_overlay)
+
+        }
+
+
+    }
 }

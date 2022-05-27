@@ -21,6 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="-200dp"
+        android:fontFamily="@font/jetbrains_mono"
         android:gravity="center_horizontal|center_vertical"
         android:text="@string/title_text"
         android:textAlignment="gravity"
@@ -40,6 +41,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
+            android:fontFamily="@font/jetbrains_mono"
             android:gravity="center"
             android:text="@string/signup_hint"
             android:textSize="30sp" />
@@ -55,6 +57,7 @@
                 android:layout_margin="4dp"
                 android:autofillHints=""
                 android:ems="10"
+                android:fontFamily="@font/jetbrains_mono"
                 android:hint="@string/email_hint"
                 android:inputType="textEmailAddress"
                 android:minHeight="48dp"
@@ -73,6 +76,7 @@
                 android:layout_margin="4dp"
                 android:autofillHints=""
                 android:ems="10"
+                android:fontFamily="@font/jetbrains_mono"
                 android:hint="@string/password_hint"
                 android:inputType="textPassword"
                 android:minHeight="48dp"
@@ -99,6 +103,7 @@
                 android:id="@+id/strengthText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/jetbrains_mono"
                 android:paddingStart="4dp"
                 android:paddingEnd="4dp"
                 android:text="@string/weak" />
@@ -110,6 +115,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:fontFamily="@font/jetbrains_mono"
             android:text="@string/signup_hint" />
     </LinearLayout>
 
@@ -119,6 +125,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:layout_marginStart="16dp"
+        android:fontFamily="@font/jetbrains_mono"
         android:minHeight="48dp"
         android:text="@string/back_hint" />
 

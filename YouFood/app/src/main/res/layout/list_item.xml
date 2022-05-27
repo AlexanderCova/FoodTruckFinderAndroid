@@ -20,6 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
+            android:fontFamily="@font/jetbrains_mono"
             android:textAlignment="textEnd"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -31,6 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
+            android:fontFamily="@font/jetbrains_mono"
             android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -53,6 +55,7 @@
         android:id="@+id/bodyLabel"
         android:layout_width="match_parent"
         android:layout_height="100dp"
+        android:fontFamily="@font/jetbrains_mono"
         android:paddingLeft="64dp"
         android:textAlignment="textStart"
         tools:text="Body" />
