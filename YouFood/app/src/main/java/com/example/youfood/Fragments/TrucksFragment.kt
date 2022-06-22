@@ -80,6 +80,7 @@ class TrucksFragment : Fragment() {
 
                         val intent = Intent(requireActivity(), TruckScreen::class.java)
                         intent.putExtra("TruckName", truckNameArray[position])
+                        intent.putExtra("flag", "user")
                         startActivity(intent)
                     }
 

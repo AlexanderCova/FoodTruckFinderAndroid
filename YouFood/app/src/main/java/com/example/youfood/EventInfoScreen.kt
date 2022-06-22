@@ -1,12 +1,13 @@
 package com.example.youfood
 
-import android.annotation.SuppressLint
-import android.app.Activity
-import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.*
+import androidx.viewpager.widget.ViewPager
+import androidx.viewpager2.widget.ViewPager2
+import com.example.youfood.Adapter.EventPagerAdapter
+import com.example.youfood.Adapter.TruckPagerAdapter
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.coroutines.awaitStringResponseResult
 import kotlinx.coroutines.runBlocking
@@ -15,21 +16,30 @@ import java.io.File
 class EventInfoScreen : AppCompatActivity() {
 
     var interested : Boolean = false
+    lateinit var name : String
+    lateinit var email : String
+
+    private lateinit var mPagerAdapter: EventPagerAdapter
+    private lateinit var mPagerViewAdapter: EventPagerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_event_info_screen)
 
-        val name = intent.getStringExtra("name")
+        val mViewPager = findViewById<ViewPager>(R.id.eventViewPager)
+
+        name = intent.getStringExtra("name")!!
 
         val goingLabel = findViewById<TextView>(R.id.goingAmount)
         val nameLabel = findViewById<TextView>(R.id.eventName)
         val goingButton = findViewById<Button>(R.id.goingButton)
+        val infoButton = findViewById<Button>(R.id.eventInfoTab)
+        val trucksButton = findViewById<Button>(R.id.eventTrucksTab)
 
         val accountFile = File(filesDir, "records.txt").readLines()
-        val email = accountFile[0]
+        email = accountFile[0]
 
-        load_screen(name!!, email)
+        load_screen(name, email)
 
 
 
@@ -59,6 +69,18 @@ class EventInfoScreen : AppCompatActivity() {
                 }
             }
         }
+
+        infoButton.setOnClickListener {
+            mViewPager.currentItem = 0
+        }
+
+        trucksButton.setOnClickListener {
+            mViewPager.currentItem = 1
+        }
+
+        mPagerViewAdapter = EventPagerAdapter(supportFragmentManager)
+        mViewPager.adapter = mPagerViewAdapter
+        mViewPager.offscreenPageLimit = 2
 
 
 

@@ -1,84 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="1.0"
     tools:context=".EventInfoScreen">
 
-    <TextView
-        android:id="@+id/eventName"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="@drawable/title_background"
-        android:padding="16dp"
-        android:textAlignment="center"
-        android:textColor="@color/white"
-        android:textSize="34sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Event Name" />
-
-    <ImageButton
-        android:id="@+id/eventBackButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:backgroundTint="@android:color/transparent"
-        android:contentDescription="@string/back_hint"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_back_arrow_48"
-        app:tint="@color/white" />
-
-    <Button
-        android:id="@+id/goingButton"
-        android:layout_width="160dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:foregroundTint="@color/white"
-        android:text="@string/interested"
-        app:icon="@drawable/ic_baseline_star_48"
-        app:iconTint="@color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout4" />
-
     <LinearLayout
-        android:id="@+id/linearLayout4"
-        android:layout_width="160dp"
-        android:layout_height="160dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/layout_outline"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/eventName">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight=".5"
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/goingAmount"
+        <ImageButton
+            android:id="@+id/imageButton"
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight=".8"
-            android:textSize="50sp"
-            tools:text="RSVP'd" />
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:backgroundTint="@android:color/transparent"
+            android:contentDescription="@string/back_hint"
+            app:srcCompat="@drawable/ic_back_arrow_48"
+            app:tint="@color/black" />
 
         <TextView
-            android:id="@+id/goingDescLabel"
+            android:id="@+id/eventName"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight=".2"
-            android:text="@string/interested"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="16dp"
+            android:fontFamily="@font/nunito"
             android:textAlignment="center"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            android:textColor="@color/black"
+            android:textSize="48sp"
+            android:typeface="normal"
+            tools:text="Event Name" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:importantForAccessibility="no"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintDimensionRatio="w,1:1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_optimizationLevel="ratio"
+                app:srcCompat="@drawable/yellow_outline" />
+
+            <TextView
+                android:id="@+id/goingAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/nunito"
+                android:textColor="@color/black"
+                android:textSize="48sp"
+                app:layout_constraintBottom_toBottomOf="@+id/imageView"
+                app:layout_constraintEnd_toEndOf="@+id/imageView"
+                app:layout_constraintStart_toStartOf="@+id/imageView"
+                app:layout_constraintTop_toTopOf="@+id/imageView"
+                tools:text="222" />
+
+            <Button
+                android:id="@+id/goingButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:elevation="10dp"
+                android:fontFamily="@font/nunito"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:text="@string/interested"
+                android:textSize="20sp"
+                app:icon="@drawable/ic_baseline_star_48"
+                app:iconTint="#000000"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/imageView"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="323dp"
+        android:layout_weight=".2">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <Button
+            android:id="@+id/eventInfoTab"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="8dp"
+            android:layout_weight="1"
+            android:backgroundTint="@color/gold"
+            android:fontFamily="@font/nunito"
+            android:text="@string/info_hint"
+            android:textColor="@color/black" />
+
+        <Button
+            android:id="@+id/eventTrucksTab"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="8dp"
+            android:layout_weight="1"
+            android:backgroundTint="@color/gray"
+            android:fontFamily="@font/nunito"
+            android:text="@string/trucks_hint"
+            android:textColor="@color/black" />
+    </LinearLayout>
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/eventViewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight=".3" />
+</LinearLayout>

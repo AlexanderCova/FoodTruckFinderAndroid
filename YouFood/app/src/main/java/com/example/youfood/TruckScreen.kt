@@ -55,6 +55,7 @@ class TruckScreen : AppCompatActivity(), OnMapReadyCallback {
         setContentView(binding.root)
 
         truckName = intent.getStringExtra("TruckName") as String
+        val flag = intent.getStringExtra("flag") as String
         val backButton = binding.truckBackButton
 
         val file = File(filesDir, "records.txt").readLines()
@@ -64,6 +65,7 @@ class TruckScreen : AppCompatActivity(), OnMapReadyCallback {
         val infoTabButton = binding.infoTabButton
         val mapTabButton = binding.mapTabButton
         val reviewsTabButton = binding.reviewsTabButton
+
 
 
 
@@ -82,9 +84,17 @@ class TruckScreen : AppCompatActivity(), OnMapReadyCallback {
                 }
             )
         }
+        var intent = Intent(this, UserScreen::class.java)
 
         backButton.setOnClickListener {
-            val intent = Intent(this, UserScreen::class.java)
+            when (flag) {
+                "user" -> {intent = Intent(this, UserScreen::class.java)}
+                "event" -> {
+                    val eventName = intent.getStringExtra("event")
+                    intent = Intent(this, EventInfoScreen::class.java)
+                    intent.putExtra("name", eventName)
+                }
+            }
             startActivity(intent)
             overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
         }
