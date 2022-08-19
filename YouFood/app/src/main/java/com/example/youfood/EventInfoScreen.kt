@@ -29,6 +29,7 @@ class EventInfoScreen : AppCompatActivity() {
         val mViewPager = findViewById<ViewPager>(R.id.eventViewPager)
 
         name = intent.getStringExtra("name")!!
+        Log.i("INFO", name)
 
         val goingLabel = findViewById<TextView>(R.id.goingAmount)
         val nameLabel = findViewById<TextView>(R.id.eventName)
@@ -46,12 +47,15 @@ class EventInfoScreen : AppCompatActivity() {
 
         goingButton.setOnClickListener {
             if (interested) {
+                Log.i("Unattending", "This is being clicked")
                 runBlocking {
-                    val (_,_, result) = Fuel.post("http://foodtruckfinder.com/unattending-event", listOf("name" to name, "account" to email)).awaitStringResponseResult()
+                    val (_,_, result) = Fuel.post("http://foodtruckfindermi.com/unattending-event", listOf("name" to name, "account" to email)).awaitStringResponseResult()
 
                     result.fold(
                         { data ->
                             load_screen(name, email)
+                            interested = false
+                            goingButton.text = getString(R.string.interested)
                         },
                         { error -> Log.e("http", "$error")}
                     )
@@ -100,19 +104,21 @@ class EventInfoScreen : AppCompatActivity() {
 
             result.fold(
                 { data ->
-                    val eventInfoList = data.split("`")
+                    var eventInfoList = data.split("`")
+                    eventInfoList = eventInfoList.drop(1)
 
                     //TODO figure out what info is where and add it into the screen
                     val eventName = eventInfoList[0]
                     val desc = eventInfoList[1]
                     val date = eventInfoList[2]
                     val city = eventInfoList[3]
-                    val going = eventInfoList[5]
-                    val isGoing = eventInfoList[6]
+                    val goingAmount = eventInfoList[4]
+                    val isGoing = eventInfoList[5]
+
 
 
                     nameLabel.text = name
-                    goingLabel.text = going
+                    goingLabel.text = goingAmount
 
                     if (isGoing == "true") {
                         goingButton.text = getString(R.string.uninterested)

@@ -51,7 +51,7 @@ class EventInfoFragment : Fragment() {
 
                     eventCityLabel.text = city
                     eventInfoDateLabel.text = date
-                    eventDescLabel.text = desc
+                    descriptionLabel.text = desc
 
                 },
                 { error ->

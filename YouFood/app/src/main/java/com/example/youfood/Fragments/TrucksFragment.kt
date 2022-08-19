@@ -17,6 +17,7 @@ import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.coroutines.awaitStringResponseResult
 import kotlinx.android.synthetic.main.fragment_trucks.*
 import kotlinx.coroutines.runBlocking
+import org.json.JSONObject
 
 
 class TrucksFragment : Fragment() {
@@ -52,34 +53,34 @@ class TrucksFragment : Fragment() {
 
             result.fold(
                 { data ->
-                    val truckArray = data.split("^")
-                    val truckNameArray = truckArray[0].split("`").drop(1)
-                    val truckProfileArray = truckArray[1].split("`").drop(1)
-                    val isOpenArray = truckArray[2].split("`").drop(1)
-                    val ratingArray = truckArray[3].split("`").drop(1)
-                    val foodTypeArray = truckArray[4].split("`").drop(1)
+                    val json_string = """
+                        {
+                            "Trucks": $data
+                            
+                        }
+                    """.trimIndent()
                     val searchView = truckSearchView
 
                     val truckArrayList = ArrayList<Truck>()
 
-                    var i = 0
-                    repeat (truckNameArray.count()) {
+                    val truckJsonObject = JSONObject(json_string)
+                    val truckObject = truckJsonObject.getJSONArray("Trucks")
 
+                    for (i in 0 until(truckObject!!.length())) {
                         val truck = Truck(
-                            truckNameArray[i],
-                            truckProfileArray[i],
-                            isOpenArray[i],
-                            ratingArray[i],
-                            foodTypeArray[i]
-                        )
+                            truckObject.getJSONObject(i).getString("truckname"),
+                            truckObject.getJSONObject(i).getString("profile"),
+                            truckObject.getJSONObject(i).getString("isopen"),
+                            truckObject.getJSONObject(i).getString("rating"),
+                            truckObject.getJSONObject(i).getString("foodtype"))
+
                         truckArrayList.add(truck)
-                        i += 1
                     }
                     truckList.adapter = TruckAdapter(requireActivity(), truckArrayList)
                     truckList.setOnItemClickListener { _, _, position, _ ->
 
                         val intent = Intent(requireActivity(), TruckScreen::class.java)
-                        intent.putExtra("TruckName", truckNameArray[position])
+                        intent.putExtra("TruckName", truckArrayList[position].name)
                         intent.putExtra("flag", "user")
                         startActivity(intent)
                     }
@@ -89,16 +90,10 @@ class TrucksFragment : Fragment() {
 
                             val newTruckList = ArrayList<Truck>()
                             searchView.clearFocus()
-                            for (i in truckNameArray.indices) {
-                                if (truckNameArray[i].contains(query.toString())) {
+                            for (i in truckArrayList.indices) {
+                                if (truckArrayList[i].name!!.contains(query.toString())) {
                                     newTruckList.add(
-                                        Truck(
-                                        truckNameArray[i],
-                                        truckProfileArray[i],
-                                        isOpenArray[i],
-                                        ratingArray[i],
-                                        foodTypeArray[i]
-                                    )
+                                        truckArrayList[i]
                                     )
                                     truckList.adapter = TruckAdapter(requireActivity(), newTruckList)
                                 }
@@ -109,16 +104,10 @@ class TrucksFragment : Fragment() {
                         override fun onQueryTextChange(newText: String?): Boolean {
                             val newTruckList = ArrayList<Truck>()
 
-                            for (i in truckNameArray.indices) {
-                                if (truckNameArray[i].contains(newText!!)) {
+                            for (i in truckArrayList.indices) {
+                                if (truckArrayList[i].name!!.contains(newText!!)) {
                                     newTruckList.add(
-                                        Truck(
-                                        truckNameArray[i],
-                                        truckProfileArray[i],
-                                        isOpenArray[i],
-                                        ratingArray[i],
-                                        foodTypeArray[i]
-                                    )
+                                        truckArrayList[i]
                                     )
                                     truckList.adapter = TruckAdapter(requireActivity(), newTruckList)
                                 }

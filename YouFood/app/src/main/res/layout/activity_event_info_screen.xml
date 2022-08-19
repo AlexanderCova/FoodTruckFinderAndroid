@@ -104,7 +104,8 @@
             android:backgroundTint="@color/gold"
             android:fontFamily="@font/nunito"
             android:text="@string/info_hint"
-            android:textColor="@color/black" />
+            android:textColor="@color/black"
+            tools:ignore="TextContrastCheck" />
 
         <Button
             android:id="@+id/eventTrucksTab"
@@ -120,7 +121,7 @@
             android:textColor="@color/black" />
     </LinearLayout>
 
-    <androidx.viewpager2.widget.ViewPager2
+    <androidx.viewpager.widget.ViewPager
         android:id="@+id/eventViewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

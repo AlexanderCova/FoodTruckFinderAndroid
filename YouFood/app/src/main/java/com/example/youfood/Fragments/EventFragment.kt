@@ -16,6 +16,8 @@ import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.coroutines.awaitStringResponseResult
 import kotlinx.android.synthetic.main.fragment_event.*
 import kotlinx.coroutines.runBlocking
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class EventFragment : Fragment() {
@@ -45,6 +47,7 @@ class EventFragment : Fragment() {
                     val eventDescArray = eventArray[1].split("`").drop(1)
                     val eventDateArray = eventArray[2].split("`").drop(1)
                     val searchView = eventSearchView
+                    Log.i("EVENT", Arrays.toString(eventNameArray))
 
                     val eventArrayList = ArrayList<Event>()
 
@@ -60,6 +63,7 @@ class EventFragment : Fragment() {
                     eventList.setOnItemClickListener { _, _, position, _ ->
 
                         val intent = Intent(requireActivity(), EventInfoScreen::class.java)
+                        Log.i("INFO", eventNameArray[position])
                         intent.putExtra("name", eventNameArray[position])
                         startActivity(intent)
 

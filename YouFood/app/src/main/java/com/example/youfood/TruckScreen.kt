@@ -14,6 +14,7 @@ import com.example.youfood.Adapter.PagerAdapter
 import com.example.youfood.Adapter.ReviewAdapter
 import com.example.youfood.Adapter.TruckPagerAdapter
 import com.example.youfood.DataClasses.Review
+import com.example.youfood.DataClasses.Truck
 import com.example.youfood.databinding.ActivityTruckScreenBinding
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.coroutines.awaitStringResponseResult
@@ -23,21 +24,31 @@ import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.activity_truck_screen.*
 import kotlinx.android.synthetic.main.fragment_truck_reviews.*
 import kotlinx.coroutines.runBlocking
+import org.json.JSONObject
 import java.io.File
 
+class truckInfo (
+    var name : String,
+    var city : String,
+    var email : String,
+    var foodtype : String,
+    var profile : String,
+    var website : String,
+    var isopen : String,
+    var lon : String,
+    var lat : String,
+    var rating : String) {}
 
-class TruckScreen : AppCompatActivity(), OnMapReadyCallback {
+
+
+
+class TruckScreen : AppCompatActivity() {
 
     var lon : Double = 0.0
     var lat : Double = 0.0
     private lateinit var infoArray : Array<String>
 
-    private lateinit var reviewBodyArray : Array<String>
-    private lateinit var reviewAuthorArray: Array<String>
-    private lateinit var reviewDateArray: Array<String>
-    private lateinit var reviewRatingArray: Array<String>
-
-    private lateinit var reviewArrayList : ArrayList<Review>
+    private lateinit var truckinfo : truckInfo
 
     private lateinit var binding: ActivityTruckScreenBinding
 
@@ -73,11 +84,28 @@ class TruckScreen : AppCompatActivity(), OnMapReadyCallback {
             val (_, _, result) = Fuel.get("http://foodtruckfindermi.com/get-truck-info?name=${truckName}").awaitStringResponseResult()
             result.fold(
                 {data ->
-                    var answer = data.split("`")
-                    answer = answer.drop(1)
-                    infoArray = answer.toTypedArray()
+                    val truckJsonString = """
+                        {
+                            "Truck": $data
+                        }
+                    """.trimIndent()
 
-                    loadScreen(infoArray)
+                    val truckJsonObject = JSONObject(truckJsonString)
+                    val truckObject = truckJsonObject.getJSONArray("Truck")
+
+                    truckinfo = truckInfo(
+                        truckObject.getJSONObject(0).getString("truckname"),
+                        truckObject.getJSONObject(0).getString("city"),
+                        truckObject.getJSONObject(0).getString("email"),
+                        truckObject.getJSONObject(0).getString("foodtype"),
+                        truckObject.getJSONObject(0).getString("profile"),
+                        truckObject.getJSONObject(0).getString("website"),
+                        truckObject.getJSONObject(0).getString("isopen"),
+                        truckObject.getJSONObject(0).getString("lon"),
+                        truckObject.getJSONObject(0).getString("lat"),
+                        truckObject.getJSONObject(0).getString("rating"))
+
+                    loadScreen(truckinfo)
                 },
                 { error ->
                     Log.e("http", "${error.exception}")
@@ -99,7 +127,7 @@ class TruckScreen : AppCompatActivity(), OnMapReadyCallback {
             overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
         }
 
-        truckemail = infoArray[2]
+        truckemail = truckinfo.email
 
 
 
@@ -139,12 +167,12 @@ class TruckScreen : AppCompatActivity(), OnMapReadyCallback {
         infoTabButton.setBackgroundColor(resources.getColor(R.color.gold))
     }
 
-    private fun loadScreen(info : Array<String>) {
-        val name = info[0]
-        val profile = info[5]
-        lon = info[8].toDouble()
-        lat = info[9].toDouble()
-        val rating = info[10]
+    private fun loadScreen(truck : truckInfo) {
+        val name = truck.name
+        val profile = truck.profile
+        lon = truck.lon.toDouble()
+        lat = truck.lat.toDouble()
+        val rating = truck.rating
 
 
         val nameLabel = binding.truckName
@@ -161,28 +189,9 @@ class TruckScreen : AppCompatActivity(), OnMapReadyCallback {
             ratingBar.rating = 0.0F
         }
 
-
-
-
-
-
         val bytes = Base64.decode(profile, Base64.DEFAULT)
         val bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
         profileImg.setImageBitmap(bmp)
-
-
-
-
-
-
-    }
-
-    override fun onMapReady(googleMap: GoogleMap) {
-        googleMap.addMarker(
-            MarkerOptions()
-                .position(LatLng(lat, lon)))
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(LatLng(lat, lon)))
-        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(lat, lon), 15F))
 
     }
 
