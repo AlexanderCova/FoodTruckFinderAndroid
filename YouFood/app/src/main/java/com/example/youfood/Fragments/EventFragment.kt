@@ -16,7 +16,7 @@ import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.coroutines.awaitStringResponseResult
 import kotlinx.android.synthetic.main.fragment_event.*
 import kotlinx.coroutines.runBlocking
-import java.util.*
+import org.json.JSONObject
 import kotlin.collections.ArrayList
 
 
@@ -42,29 +42,33 @@ class EventFragment : Fragment() {
 
             result.fold(
                 { data ->
-                    val eventArray = data.split("^")
-                    val eventNameArray = eventArray[0].split("`").drop(1).toTypedArray()
-                    val eventDescArray = eventArray[1].split("`").drop(1)
-                    val eventDateArray = eventArray[2].split("`").drop(1)
-                    val searchView = eventSearchView
-                    Log.i("EVENT", Arrays.toString(eventNameArray))
+                    val jsonString = """
+                        {
+                            "Events": $data
+                        }
+                    """.trimIndent()
 
+                    val searchView = eventSearchView
                     val eventArrayList = ArrayList<Event>()
 
-                    var i = 0
+                    val eventJsonObject = JSONObject(jsonString)
+                    val eventObject = eventJsonObject.getJSONArray("Events")
 
-                    repeat (eventNameArray.count()) {
+                    for (i in 0 until(eventObject.length())) {
+                        val event = Event(
+                            eventObject.getJSONObject(i).getString("name"),
+                            eventObject.getJSONObject(i).getString("date"),
+                            eventObject.getJSONObject(i).getString("desc")
+                        )
 
-                        val event = Event(eventNameArray[i], eventDescArray[i], eventDateArray[i])
                         eventArrayList.add(event)
-                        i += 1
                     }
                     eventList.adapter = EventAdapter(requireActivity(), eventArrayList)
                     eventList.setOnItemClickListener { _, _, position, _ ->
 
                         val intent = Intent(requireActivity(), EventInfoScreen::class.java)
-                        Log.i("INFO", eventNameArray[position])
-                        intent.putExtra("name", eventNameArray[position])
+                        Log.i("INFO", eventArrayList[position].name)
+                        intent.putExtra("name", eventArrayList[position].name)
                         startActivity(intent)
 
                     }
@@ -74,9 +78,9 @@ class EventFragment : Fragment() {
 
                             val newEventList = ArrayList<Event>()
                             searchView.clearFocus()
-                            for (i in eventNameArray.indices) {
-                                if (eventNameArray[i].contains(query.toString())) {
-                                    newEventList.add(Event(eventNameArray[i], eventDescArray[i], eventDateArray[i]))
+                            for (i in eventArrayList.indices) {
+                                if (eventArrayList[i].name.contains(query.toString())) {
+                                    newEventList.add(eventArrayList[i])
                                     eventList.adapter = EventAdapter(requireActivity(), newEventList)
                                 }
                             }
@@ -86,9 +90,9 @@ class EventFragment : Fragment() {
                         override fun onQueryTextChange(newText: String?): Boolean {
                             val newEventList = ArrayList<Event>()
 
-                            for (i in eventNameArray.indices) {
-                                if (eventNameArray[i].contains(newText.toString())) {
-                                    newEventList.add(Event(eventNameArray[i], eventDescArray[i], eventDateArray[i]))
+                            for (i in eventArrayList.indices) {
+                                if (eventArrayList[i].name.contains(newText.toString())) {
+                                    newEventList.add(eventArrayList[i])
                                     eventList.adapter = EventAdapter(requireActivity(), newEventList)
                                 }
                             }

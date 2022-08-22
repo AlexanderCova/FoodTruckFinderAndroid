@@ -7,7 +7,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import android.widget.SearchView
 import com.example.youfood.R
 import com.example.youfood.Adapter.TruckAdapter
@@ -18,6 +17,10 @@ import com.github.kittinunf.fuel.coroutines.awaitStringResponseResult
 import kotlinx.android.synthetic.main.fragment_trucks.*
 import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
+
+
+
+
 
 
 class TrucksFragment : Fragment() {
@@ -37,15 +40,9 @@ class TrucksFragment : Fragment() {
 
     }
 
-    private fun array(array: Array<String>): ArrayAdapter<String> {
-
-        return ArrayAdapter(
-            requireActivity(), android.R.layout.simple_list_item_1,
-            array
-        )
-    }
 
     private fun setupSearch() {
+
 
         runBlocking {
             val (_, _, result) = Fuel.get("http://foodtruckfindermi.com/truck-query")

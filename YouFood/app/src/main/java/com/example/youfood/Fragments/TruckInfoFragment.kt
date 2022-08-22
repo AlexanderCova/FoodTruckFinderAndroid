@@ -13,11 +13,27 @@ import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.coroutines.awaitStringResponseResult
 import kotlinx.android.synthetic.main.fragment_truck_info.*
 import kotlinx.coroutines.runBlocking
+import org.json.JSONObject
+
+
+class TruckInfo (
+    var name : String,
+    var city : String,
+    var email : String,
+    var foodtype : String,
+    var profile : String,
+    var website : String,
+    var isopen : String,
+    var lon : String,
+    var lat : String,
+    var rating : String) {}
+
+
 
 
 class TruckInfoFragment : Fragment() {
 
-    private lateinit var infoArray : Array<String>
+    private lateinit var truckinfo : TruckInfo
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,11 +52,27 @@ class TruckInfoFragment : Fragment() {
             val (_, _, result) = Fuel.get("http://foodtruckfindermi.com/get-truck-info?name=${truckName}").awaitStringResponseResult()
             result.fold(
                 {data ->
-                    var answer = data.split("`")
-                    answer = answer.drop(1)
-                    infoArray = answer.toTypedArray()
+                    val jsonString = """
+                        {
+                            "Truck": $data
+                        }
+                    """.trimIndent()
 
-                    loadScreen(infoArray)
+                    val truckJsonObject = JSONObject(jsonString)
+                    val truckObject = truckJsonObject.getJSONArray("Truck")
+
+                    truckinfo = TruckInfo(truckObject.getJSONObject(0).getString("truckname"),
+                        truckObject.getJSONObject(0).getString("city"),
+                        truckObject.getJSONObject(0).getString("email"),
+                        truckObject.getJSONObject(0).getString("foodtype"),
+                        truckObject.getJSONObject(0).getString("profile"),
+                        truckObject.getJSONObject(0).getString("website"),
+                        truckObject.getJSONObject(0).getString("isopen"),
+                        truckObject.getJSONObject(0).getString("lon"),
+                        truckObject.getJSONObject(0).getString("lat"),
+                        truckObject.getJSONObject(0).getString("rating"))
+
+                    loadScreen(truckinfo)
                 },
                 { error ->
                     Log.e("http", "${error.exception}")
@@ -50,12 +82,12 @@ class TruckInfoFragment : Fragment() {
     }
 
 
-    private fun loadScreen(info: Array<String>) {
-        val website = info[6]
-        val isOpen = info[7]
-        val city = info[1]
-        val email = info[2]
-        val food = info[4]
+    private fun loadScreen(truck: TruckInfo) {
+        val website = truck.website
+        val isOpen = truck.isopen
+        val city = truck.city
+        val email = truck.email
+        val food = truck.foodtype
 
         when (isOpen) {
             "0" ->  openLabel.text = getString(R.string.closed_hint)

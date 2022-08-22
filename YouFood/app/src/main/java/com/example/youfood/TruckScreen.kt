@@ -27,7 +27,7 @@ import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
 import java.io.File
 
-class truckInfo (
+class TruckInfo (
     var name : String,
     var city : String,
     var email : String,
@@ -46,9 +46,8 @@ class TruckScreen : AppCompatActivity() {
 
     var lon : Double = 0.0
     var lat : Double = 0.0
-    private lateinit var infoArray : Array<String>
 
-    private lateinit var truckinfo : truckInfo
+    private lateinit var truckinfo : TruckInfo
 
     private lateinit var binding: ActivityTruckScreenBinding
 
@@ -93,7 +92,7 @@ class TruckScreen : AppCompatActivity() {
                     val truckJsonObject = JSONObject(truckJsonString)
                     val truckObject = truckJsonObject.getJSONArray("Truck")
 
-                    truckinfo = truckInfo(
+                    truckinfo = TruckInfo(
                         truckObject.getJSONObject(0).getString("truckname"),
                         truckObject.getJSONObject(0).getString("city"),
                         truckObject.getJSONObject(0).getString("email"),
@@ -167,7 +166,7 @@ class TruckScreen : AppCompatActivity() {
         infoTabButton.setBackgroundColor(resources.getColor(R.color.gold))
     }
 
-    private fun loadScreen(truck : truckInfo) {
+    private fun loadScreen(truck : TruckInfo) {
         val name = truck.name
         val profile = truck.profile
         lon = truck.lon.toDouble()

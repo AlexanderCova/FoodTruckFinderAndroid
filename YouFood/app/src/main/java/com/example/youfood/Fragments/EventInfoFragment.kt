@@ -34,7 +34,7 @@ class EventInfoFragment : Fragment() {
 
 
 
-        runBlocking {
+        /*runBlocking {
             val (_, _, result) = Fuel.get(
                 "http://foodtruckfindermi.com/get-event-info",
                 listOf("name" to name, "account" to email)
@@ -58,7 +58,7 @@ class EventInfoFragment : Fragment() {
                     Log.e("http", "${error.exception}")
                 }
             )
-        }
+        }*/
     }
 
 }

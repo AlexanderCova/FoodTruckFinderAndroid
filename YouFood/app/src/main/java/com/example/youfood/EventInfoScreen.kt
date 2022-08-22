@@ -11,7 +11,14 @@ import com.example.youfood.Adapter.TruckPagerAdapter
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.coroutines.awaitStringResponseResult
 import kotlinx.coroutines.runBlocking
+import org.json.JSONObject
 import java.io.File
+
+class EventInfo (name : String, goingAmount : Int, goingList : String) {}
+
+
+
+
 
 class EventInfoScreen : AppCompatActivity() {
 
@@ -19,7 +26,8 @@ class EventInfoScreen : AppCompatActivity() {
     lateinit var name : String
     lateinit var email : String
 
-    private lateinit var mPagerAdapter: EventPagerAdapter
+
+    private lateinit var goingArray : MutableList<String>
     private lateinit var mPagerViewAdapter: EventPagerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,36 +48,39 @@ class EventInfoScreen : AppCompatActivity() {
         val accountFile = File(filesDir, "records.txt").readLines()
         email = accountFile[0]
 
-        load_screen(name, email)
+        loadScreen()
 
 
 
 
         goingButton.setOnClickListener {
             if (interested) {
-                Log.i("Unattending", "This is being clicked")
-                runBlocking {
-                    val (_,_, result) = Fuel.post("http://foodtruckfindermi.com/unattending-event", listOf("name" to name, "account" to email)).awaitStringResponseResult()
+                goingArray.remove(email)
+                goingButton.text = getString(R.string.uninterested)
+                goingLabel.text = goingArray.count().toString()
+                var updatedList = ""
 
-                    result.fold(
-                        { data ->
-                            load_screen(name, email)
-                            interested = false
-                            goingButton.text = getString(R.string.interested)
-                        },
-                        { error -> Log.e("http", "$error")}
-                    )
+                for (i in 0 until(goingArray.count())) {
+                    updatedList += "`" + goingArray[i]
+                }
+
+                runBlocking{
+                    val (_, _, _) = Fuel.post("http://foodtruckfindermi.com/update-going", listOf("event" to name, "updated-list" to updatedList)).awaitStringResponseResult()
                 }
             } else {
-                runBlocking {
-                    val (_,_, result) = Fuel.post("http://foodtruckfindermi.com/attending-event", listOf("name" to name, "account" to email)).awaitStringResponseResult()
+                goingArray.add(email)
+                goingButton.text = getString(R.string.interested)
+                goingLabel.text = goingArray.count().toString()
 
-                    result.fold(
-                        { data ->
-                            load_screen(name, email)
-                        },
-                        { error -> Log.e("http", "$error")}
-                    )
+                var updatedList = ""
+
+                for (i in 0 until(goingArray.count())) {
+                    updatedList += "`" + goingArray[i]
+                }
+
+                runBlocking {
+                    val (_, _, _) = Fuel.post("http://foodtruckfindermi.com/update-going", listOf("event" to name, "updated-list" to updatedList)).awaitStringResponseResult()
+                    loadScreen()
                 }
             }
         }
@@ -90,7 +101,7 @@ class EventInfoScreen : AppCompatActivity() {
 
     }
 
-    fun load_screen(name : String, email : String) {
+    fun loadScreen() {
         val goingLabel = findViewById<TextView>(R.id.goingAmount)
         val nameLabel = findViewById<TextView>(R.id.eventName)
         val goingButton = findViewById<Button>(R.id.goingButton)
@@ -104,29 +115,36 @@ class EventInfoScreen : AppCompatActivity() {
 
             result.fold(
                 { data ->
-                    var eventInfoList = data.split("`")
-                    eventInfoList = eventInfoList.drop(1)
-
-                    //TODO figure out what info is where and add it into the screen
-                    val eventName = eventInfoList[0]
-                    val desc = eventInfoList[1]
-                    val date = eventInfoList[2]
-                    val city = eventInfoList[3]
-                    val goingAmount = eventInfoList[4]
-                    val isGoing = eventInfoList[5]
+                    val jsonString = """
+                        {
+                            "Event": $data
+                        }
+                    """.trimIndent()
 
 
+                    val eventJsonObject = JSONObject(jsonString)
+                    val eventObject = eventJsonObject.getJSONArray("Event")
 
-                    nameLabel.text = name
-                    goingLabel.text = goingAmount
 
-                    if (isGoing == "true") {
+                    val goingArrayString = eventObject.getJSONObject(0).getString("going")
+                    goingArray = goingArrayString.split("`").drop(1).toMutableList()
+
+                    interested = email in goingArray
+
+                    if (interested) {
                         goingButton.text = getString(R.string.uninterested)
-                        interested = true
                     } else {
                         goingButton.text = getString(R.string.interested)
-                        interested = false
                     }
+
+                    nameLabel.text = eventObject.getJSONObject(0).getString("name")
+                    goingLabel.text = goingArray.count().toString()
+
+
+
+
+                    //TODO figure out what info is where and add it into the screen
+
 
 
                 },
@@ -134,6 +152,9 @@ class EventInfoScreen : AppCompatActivity() {
             )
         }
     }
+
+
+
 }
 
 
