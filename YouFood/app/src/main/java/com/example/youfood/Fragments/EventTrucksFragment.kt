@@ -14,8 +14,10 @@ import com.example.youfood.R
 import com.example.youfood.TruckScreen
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.coroutines.awaitStringResponseResult
+import kotlinx.android.synthetic.main.fragment_event_trucks.*
 import kotlinx.android.synthetic.main.fragment_trucks.*
 import kotlinx.coroutines.runBlocking
+import org.json.JSONObject
 
 class EventTrucksFragment : Fragment() {
     override fun onCreateView(
@@ -33,38 +35,42 @@ class EventTrucksFragment : Fragment() {
 
 
         runBlocking {
-            val (_, _, result) = Fuel.get("http://foodtruckfindermi.com/event-truck-query", listOf("name" to name))
+            val (_, _, result) = Fuel.get("http://foodtruckfindermi.com/get-event-info", listOf("name" to name))
                 .awaitStringResponseResult()
 
             result.fold(
                 { data ->
-                    val truckArray = data.split("^")
-                    val truckNameArray = truckArray[0].split("`").drop(1)
-                    val truckProfileArray = truckArray[1].split("`").drop(1)
-                    val isOpenArray = truckArray[2].split("`").drop(1)
-                    val ratingArray = truckArray[3].split("`").drop(1)
-                    val foodTypeArray = truckArray[4].split("`").drop(1)
+                    val jsonString = """
+                        {
+                            "Event": $data
+                        }
+                    """.trimIndent()
 
-                    val truckArrayList = ArrayList<Truck>()
 
-                    var i = 0
-                    repeat(truckNameArray.count()) {
 
-                        val truck = Truck(
-                            truckNameArray[i],
-                            truckProfileArray[i],
-                            isOpenArray[i],
-                            ratingArray[i],
-                            foodTypeArray[i]
-                        )
-                        truckArrayList.add(truck)
-                        i += 1
-                    }
-                    truckList.adapter = TruckAdapter(requireActivity(), truckArrayList)
-                    truckList.setOnItemClickListener { _, _, position, _ ->
+
+                    val eventJsonObject = JSONObject(jsonString)
+                    val eventObject = eventJsonObject.getJSONArray("Event")
+
+
+                    val truckArrayString = eventObject.getJSONObject(0).getString("trucks")
+                    val truckArray = truckArrayString.split("`").drop(1).toMutableList()
+
+                    Log.i("INFO",truckArray.toString())
+
+
+
+
+
+                    val truckArrayList = getTruckArray(truckArray)
+
+                    Log.i("INFO",truckArrayList.toString())
+
+                    eventTruckList.adapter = TruckAdapter(requireActivity(), truckArrayList)
+                    eventTruckList .setOnItemClickListener { _, _, position, _ ->
 
                         val intent = Intent(requireActivity(), TruckScreen::class.java)
-                        intent.putExtra("TruckName", truckNameArray[position])
+                        intent.putExtra("TruckName", truckArrayList[position].name)
                         intent.putExtra("flag", "event")
                         startActivity(intent)
                     }
@@ -73,6 +79,53 @@ class EventTrucksFragment : Fragment() {
                 { error -> Log.e("http", "$error")}
             )
         }
+
+    }
+
+
+    private fun getTruckArray(nameList : MutableList<String>): ArrayList<Truck> {
+        var truckArrayList = ArrayList<Truck>()
+
+        runBlocking {
+            val (_, _, result) = Fuel.get("http://foodtruckfindermi.com/truck-query")
+                .awaitStringResponseResult()
+
+            result.fold(
+                { data ->
+                    val json_string = """
+                        {
+                            "Trucks": $data
+                            
+                        }
+                    """.trimIndent()
+                    val searchView = truckSearchView
+
+                    truckArrayList = ArrayList<Truck>()
+
+                    val truckJsonObject = JSONObject(json_string)
+                    val truckObject = truckJsonObject.getJSONArray("Trucks")
+
+                    for (i in 0 until (truckObject.length())) {
+                        if (truckObject.getJSONObject(i).getString("truckname") in nameList) {
+
+                            val truck = Truck(
+                                truckObject.getJSONObject(i).getString("truckname"),
+                                truckObject.getJSONObject(i).getString("profile"),
+                                truckObject.getJSONObject(i).getString("isopen"),
+                                truckObject.getJSONObject(i).getString("rating"),
+                                truckObject.getJSONObject(i).getString("foodtype")
+                            )
+
+                            truckArrayList.add(truck)
+                        }
+                    }
+                    return@fold truckArrayList
+                },
+                { error -> Log.e("http", "$error") }
+            )
+        }
+
+        return truckArrayList
 
     }
 }

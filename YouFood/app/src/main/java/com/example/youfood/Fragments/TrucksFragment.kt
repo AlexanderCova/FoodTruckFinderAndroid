@@ -63,7 +63,7 @@ class TrucksFragment : Fragment() {
                     val truckJsonObject = JSONObject(json_string)
                     val truckObject = truckJsonObject.getJSONArray("Trucks")
 
-                    for (i in 0 until(truckObject!!.length())) {
+                    for (i in 0 until(truckObject.length())) {
                         val truck = Truck(
                             truckObject.getJSONObject(i).getString("truckname"),
                             truckObject.getJSONObject(i).getString("profile"),

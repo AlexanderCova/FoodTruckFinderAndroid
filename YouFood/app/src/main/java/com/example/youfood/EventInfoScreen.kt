@@ -44,11 +44,16 @@ class EventInfoScreen : AppCompatActivity() {
         val goingButton = findViewById<Button>(R.id.goingButton)
         val infoButton = findViewById<Button>(R.id.eventInfoTab)
         val trucksButton = findViewById<Button>(R.id.eventTrucksTab)
+        val backButton = findViewById<ImageButton>(R.id.eventInfoScreenBackButton)
 
         val accountFile = File(filesDir, "records.txt").readLines()
         email = accountFile[0]
 
         loadScreen()
+
+        backButton.setOnClickListener{
+            onBackPressed()
+        }
 
 
 
@@ -109,7 +114,7 @@ class EventInfoScreen : AppCompatActivity() {
         runBlocking {
             val (_, _, result) = Fuel.get(
                 "http://foodtruckfindermi.com/get-event-info",
-                listOf("name" to name, "account" to email)
+                listOf("name" to name)
             )
                 .awaitStringResponseResult()
 

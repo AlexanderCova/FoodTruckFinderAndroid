@@ -1,6 +1,7 @@
 package com.example.youfood.Fragments
 
 import android.os.Bundle
+import android.text.Html
 import android.text.method.LinkMovementMethod
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -109,7 +110,7 @@ class TruckInfoFragment : Fragment() {
             websiteLabel.visibility = View.GONE
             websiteIcon.visibility = View.GONE
         } else {
-            websiteLabel.text = "<a href='${website}'>Our Website</a>"
+            websiteLabel.text = Html.fromHtml("<a href=http://$website> Website")
             websiteLabel.movementMethod = LinkMovementMethod.getInstance()
             websiteLabel.visibility = View.VISIBLE
             websiteIcon.visibility = View.VISIBLE

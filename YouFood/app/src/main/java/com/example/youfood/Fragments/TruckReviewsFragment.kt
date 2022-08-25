@@ -14,17 +14,14 @@ import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.coroutines.awaitStringResponseResult
 import kotlinx.android.synthetic.main.fragment_truck_reviews.*
 import kotlinx.coroutines.runBlocking
+import org.json.JSONObject
 import java.io.File
 
 
 class TruckReviewsFragment : Fragment() {
 
-    private lateinit var reviewBodyArray : Array<String>
-    private lateinit var reviewAuthorArray: Array<String>
-    private lateinit var reviewDateArray: Array<String>
-    private lateinit var reviewRatingArray: Array<String>
 
-    private lateinit var reviewArrayList : ArrayList<Review>
+    private var reviewArrayList : ArrayList<Review> = ArrayList()
 
 
     override fun onCreateView(
@@ -58,26 +55,23 @@ class TruckReviewsFragment : Fragment() {
 
             result.fold(
                 { data ->
-                    val reviewArray = data.split("^")
+                    val jsonString = """
+                        {
+                            "Reviews": $data
+                        }
+                    """.trimIndent()
+                    Log.i("REVIEWS", jsonString)
 
+                    val reviewJsonObject = JSONObject(jsonString)
+                    val reviewObject = reviewJsonObject.getJSONArray("Reviews")
 
-                    reviewAuthorArray = reviewArray[0].split("`").drop(1).toTypedArray()
-
-                    reviewBodyArray = reviewArray[1].split("`").drop(1).toTypedArray()
-
-                    reviewDateArray = reviewArray[2].split("`").drop(1).toTypedArray()
-
-                    reviewRatingArray = reviewArray[3].split("`").drop(1).toTypedArray()
-
-                    reviewArrayList = ArrayList()
-
-                    for (i in reviewAuthorArray.indices) {
+                    for (i in 0 until(reviewObject.length())) {
 
                         val review = Review(
-                            reviewAuthorArray[i],
-                            reviewBodyArray[i],
-                            reviewDateArray[i],
-                            reviewRatingArray[i].toFloat()
+                            reviewObject.getJSONObject(i).getString("author"),
+                            reviewObject.getJSONObject(i).getString("body"),
+                            reviewObject.getJSONObject(i).getString("date"),
+                            reviewObject.getJSONObject(i).getString("rating").toFloat()
                         )
                         reviewArrayList.add(review)
                     }
@@ -91,8 +85,7 @@ class TruckReviewsFragment : Fragment() {
                         totalHeight += listItem.measuredHeight + listItem.measuredHeightAndState / 2
                     }
                     val params: ViewGroup.LayoutParams = reviewList.layoutParams
-                    params.height =
-                        totalHeight + reviewList.dividerHeight * (reviewList.adapter.count - 1)
+                    params.height = totalHeight + reviewList.dividerHeight * (reviewList.adapter.count - 1)
                     reviewList.layoutParams = params
                     reviewList.requestLayout()
 
@@ -108,7 +101,7 @@ class TruckReviewsFragment : Fragment() {
                     listOf(
                         "author" to email,
                         "body" to bodyReviewTextEdit.text,
-                        "Truck" to truckemail,
+                        "truck" to truckemail,
                         "rating" to ratingBar.rating
                     )
                 ).awaitStringResponseResult()

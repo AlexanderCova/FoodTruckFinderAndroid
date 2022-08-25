@@ -14,6 +14,7 @@ import com.github.kittinunf.fuel.coroutines.awaitStringResponseResult
 import kotlinx.android.synthetic.main.event_list_item.*
 import kotlinx.android.synthetic.main.fragment_event_info.*
 import kotlinx.coroutines.runBlocking
+import org.json.JSONObject
 
 class EventInfoFragment : Fragment() {
 
@@ -30,24 +31,30 @@ class EventInfoFragment : Fragment() {
 
 
         val name = (activity as EventInfoScreen).name
-        val email = (activity as EventInfoScreen).email
 
 
 
-        /*runBlocking {
+        runBlocking {
             val (_, _, result) = Fuel.get(
                 "http://foodtruckfindermi.com/get-event-info",
-                listOf("name" to name, "account" to email)
-            )
-                .awaitStringResponseResult()
+                listOf("name" to name)
+            ).awaitStringResponseResult()
+
             result.fold(
                 {data ->
-                    var answer = data.split("`")
-                    answer = answer.drop(1)
+                    val jsonString = """
+                        {
+                            "Event": $data
+                        }
+                    """.trimIndent()
 
-                    val desc = answer[1]
-                    val date = answer[2]
-                    val city = answer[3]
+
+                    val eventJsonObject = JSONObject(jsonString)
+                    val eventObject = eventJsonObject.getJSONArray("Event")
+
+                    val desc = eventObject.getJSONObject(0).getString("desc")
+                    val date = eventObject.getJSONObject(0).getString("date")
+                    val city = eventObject.getJSONObject(0).getString("city")
 
                     eventCityLabel.text = city
                     eventInfoDateLabel.text = date
@@ -58,7 +65,7 @@ class EventInfoFragment : Fragment() {
                     Log.e("http", "${error.exception}")
                 }
             )
-        }*/
+        }
     }
 
 }

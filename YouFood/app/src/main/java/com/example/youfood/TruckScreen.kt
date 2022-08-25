@@ -111,19 +111,9 @@ class TruckScreen : AppCompatActivity() {
                 }
             )
         }
-        var intent = Intent(this, UserScreen::class.java)
 
         backButton.setOnClickListener {
-            when (flag) {
-                "user" -> {intent = Intent(this, UserScreen::class.java)}
-                "event" -> {
-                    val eventName = intent.getStringExtra("event")
-                    intent = Intent(this, EventInfoScreen::class.java)
-                    intent.putExtra("name", eventName)
-                }
-            }
-            startActivity(intent)
-            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
+            onBackPressed()
         }
 
         truckemail = truckinfo.email
@@ -181,7 +171,7 @@ class TruckScreen : AppCompatActivity() {
         nameLabel.text = name
         Log.i("rating", rating)
 
-        if (rating != "" && rating != "None") {
+        if (rating != "" && rating != "null") {
             ratingBar.rating = rating.toFloat()
             Log.i("rating", rating)
         } else {
