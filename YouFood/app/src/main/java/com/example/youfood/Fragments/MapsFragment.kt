@@ -14,6 +14,8 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import kotlinx.android.synthetic.main.fragment_maps.*
+import kotlinx.android.synthetic.main.fragment_truck_info.*
 
 class MapsFragment : Fragment() {
 
@@ -48,5 +50,19 @@ class MapsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync(callback)
+
+        val activity = (activity as TruckScreen)
+
+        when (activity.isOpen) {
+            "0" ->  {
+                mapLayout?.visibility = View.GONE
+                closedText.visibility = View.VISIBLE
+            }
+            "1" -> {
+                mapLayout?.visibility = View.VISIBLE
+                closedText.visibility = View.GONE
+
+            }
+        }
     }
 }

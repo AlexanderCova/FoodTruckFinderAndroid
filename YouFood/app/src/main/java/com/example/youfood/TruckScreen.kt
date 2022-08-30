@@ -53,6 +53,7 @@ class TruckScreen : AppCompatActivity() {
 
     lateinit var truckemail : String
     lateinit var truckName : String
+    lateinit var isOpen : String
 
 
 
@@ -162,6 +163,7 @@ class TruckScreen : AppCompatActivity() {
         lon = truck.lon.toDouble()
         lat = truck.lat.toDouble()
         val rating = truck.rating
+        isOpen = truck.isopen
 
 
         val nameLabel = binding.truckName
