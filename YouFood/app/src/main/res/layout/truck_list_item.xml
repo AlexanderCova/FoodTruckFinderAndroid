@@ -37,7 +37,6 @@
             android:id="@+id/listTruckName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/jetbrains_mono"
             android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -68,7 +67,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:fontFamily="@font/jetbrains_mono"
                 tools:text="IsOpen" />
 
             <TextView
@@ -76,7 +74,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:fontFamily="@font/jetbrains_mono"
                 tools:text="Rating" />
 
             <TextView
@@ -84,7 +81,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:fontFamily="@font/jetbrains_mono"
                 tools:text="FoodType" />
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>

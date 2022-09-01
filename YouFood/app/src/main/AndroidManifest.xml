@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.youfood">
+    package="com.foodtruckfindermi.client">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -16,7 +16,7 @@
         android:theme="@style/Theme.YouFood"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".EventInfoScreen"
+            android:name="com.foodtruckfindermi.client.EventInfoScreen"
             android:exported="false"
             android:theme="@style/Theme.YouFood.NoActionBar"/>
 
@@ -25,23 +25,23 @@
             android:value="AIzaSyAelUprslnEce5ohSClHArWiK5Q-3KGCMs" />
 
         <activity
-            android:name=".TruckScreen"
+            android:name="com.foodtruckfindermi.client.TruckScreen"
             android:exported="false"
             android:theme="@style/Theme.YouFood.NoActionBar" />
         <activity
-            android:name=".UserScreen"
+            android:name="com.foodtruckfindermi.client.UserScreen"
             android:exported="false"
             android:theme="@style/Theme.YouFood.NoActionBar" />
         <activity
-            android:name=".SignupScreen"
+            android:name="com.foodtruckfindermi.client.SignupScreen"
             android:exported="false"
             android:theme="@style/Theme.YouFood.NoActionBar" />
         <activity
-            android:name=".LoginScreen"
+            android:name="com.foodtruckfindermi.client.LoginScreen"
             android:exported="false"
             android:theme="@style/Theme.YouFood.NoActionBar" />
         <activity
-            android:name=".MainActivity"
+            android:name="com.foodtruckfindermi.client.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.YouFood.NoActionBar">
             <intent-filter>

@@ -18,7 +18,6 @@
             android:layout_height="150dp"
             android:layout_gravity="center_horizontal|center_vertical"
             android:ems="10"
-            android:fontFamily="@font/jetbrains_mono"
             android:gravity="start|top"
             android:hint="@string/review_body_hint"
             android:importantForAutofill="no"
@@ -40,7 +39,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal|center_vertical"
-            android:fontFamily="@font/jetbrains_mono"
             android:text="@string/submit_hint" />
 
         <ListView
