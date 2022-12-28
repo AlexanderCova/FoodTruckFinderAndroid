@@ -10,10 +10,12 @@ import android.view.ViewGroup
 import android.widget.SearchView
 import com.foodtruckfindermi.client.DataClasses.Event
 import com.foodtruckfindermi.client.Adapter.EventAdapter
+import com.foodtruckfindermi.client.CreateEventActivity
 import com.foodtruckfindermi.client.EventInfoScreen
 import com.foodtruckfindermi.client.R
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.coroutines.awaitStringResponseResult
+import com.skydoves.balloon.createBalloon
 import kotlinx.android.synthetic.main.fragment_event.*
 import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
@@ -35,6 +37,13 @@ class EventFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         Log.i("FRAGMENT", "Loaded event fragment")
+
+        createEventButton.setOnClickListener {
+            val intent = Intent(requireActivity(), CreateEventActivity::class.java)
+            startActivity(intent)
+        }
+
+
 
         runBlocking {
             val (_, _, result) = Fuel.get("http://foodtruckfindermi.com/event-query")

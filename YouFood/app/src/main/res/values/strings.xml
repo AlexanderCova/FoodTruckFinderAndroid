@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">YouFood</string>
+    <string name="app_name">FoodTruckFinderMI</string>
     <string name="email_hint">Email</string>
     <string name="password_hint">Password</string>
     <string name="signup_hint">Signup</string>
@@ -53,5 +53,28 @@
     <string name="map_hint">Map</string>
     <string name="info_hint">Info</string>
     <string name="trucks_hint">Trucks</string>
+    <string name="enable_2fa">Enable 2FA</string>
+
+    <string-array name="providers">
+        <item name="AT&amp;T">AT&amp;T</item>
+        <item name="Verizon">Verizon</item>
+        <item name="Boost Mobile">Boost Mobile</item>
+        <item name="C-Spire">C-Spire</item>
+        <item name="Cricket Wireless">Cricket Wireless</item>
+        <item name="Consumer Cellular">Consumer Cellular</item>
+        <item name="Google Project Fi">Google Project Fi</item>
+        <item name="Metro PCS">Metro PCS</item>
+        <item name="Mine Mobile">Mint Mobile</item>
+        <item name="Page Plus">Page Plus</item>
+        <item name="Republic Wireless">Republic Wireless</item>
+        <item name="Sprint">Sprint</item>
+        <item name="Straight Talk">Straight Talk</item>
+        <item name="T-Mobile">T-Mobile</item>
+        <item name="Ting">Ting</item>
+        <item name="Tracfone">Tracfone</item>
+        <item name="U.S. Cellular">U.S. Cellular</item>
+        <item name="Virgin Mobile">Virgin Mobile</item>
+        <item name="Xfinity Mobile">Xfinity Mobile</item>
+    </string-array>
 
 </resources>

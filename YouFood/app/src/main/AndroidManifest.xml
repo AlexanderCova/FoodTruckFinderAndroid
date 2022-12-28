@@ -6,58 +6,75 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.BILLING" />
 
     <application
+        android:name=".QonversionApp"
         android:allowBackup="true"
+        android:hardwareAccelerated="true"
         android:icon="@mipmap/new_icon"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/new_icon_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.YouFood"
-        android:usesCleartextTraffic="true"
-        android:hardwareAccelerated="true">
+        android:usesCleartextTraffic="true">
+        <activity
+            android:name=".ChatScreen"
+            android:exported="false" />
+        <activity
+            android:name=".MessagesScreen"
+            android:exported="false" />
+        <activity
+            android:name=".CreateEventActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Enable2FAuthActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SettingsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SplashActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-        <!-- Sample AdMob app ID: ca-app-pub-3940256099942544~3347511713 -->
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity> <!-- Sample AdMob app ID: ca-app-pub-3940256099942544~3347511713 -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-3940256099942544~3347511713"/>
-
+            android:value="ca-app-pub-3940256099942544~3347511713" />
 
         <activity
-            android:name="com.foodtruckfindermi.client.EventInfoScreen"
+            android:name=".EventInfoScreen"
             android:exported="false"
-            android:theme="@style/Theme.YouFood.NoActionBar"/>
+            android:theme="@style/Theme.YouFood.NoActionBar" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAelUprslnEce5ohSClHArWiK5Q-3KGCMs" />
 
         <activity
-            android:name="com.foodtruckfindermi.client.TruckScreen"
+            android:name=".TruckScreen"
             android:exported="false"
             android:theme="@style/Theme.YouFood.NoActionBar" />
         <activity
-            android:name="com.foodtruckfindermi.client.UserScreen"
+            android:name=".UserScreen"
             android:exported="false"
             android:theme="@style/Theme.YouFood.NoActionBar" />
         <activity
-            android:name="com.foodtruckfindermi.client.SignupScreen"
+            android:name=".SignupScreen"
             android:exported="false"
             android:theme="@style/Theme.YouFood.NoActionBar" />
         <activity
-            android:name="com.foodtruckfindermi.client.LoginScreen"
+            android:name=".LoginScreen"
             android:exported="false"
             android:theme="@style/Theme.YouFood.NoActionBar" />
         <activity
-            android:name="com.foodtruckfindermi.client.MainActivity"
-            android:exported="true"
-            android:theme="@style/Theme.YouFood.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:name=".MainActivity"
+            android:exported="false"
+            android:theme="@style/Theme.YouFood.NoActionBar" />
     </application>
 
 </manifest>

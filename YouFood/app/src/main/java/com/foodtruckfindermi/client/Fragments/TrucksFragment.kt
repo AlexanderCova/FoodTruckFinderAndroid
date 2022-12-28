@@ -9,19 +9,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
-import com.foodtruckfindermi.client.R
+import com.foodtruckfindermi.client.*
 import com.foodtruckfindermi.client.Adapter.TruckAdapter
-import com.foodtruckfindermi.client.TruckScreen
 import com.foodtruckfindermi.client.DataClasses.Truck
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.coroutines.awaitStringResponseResult
 import kotlinx.android.synthetic.main.fragment_trucks.*
 import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
-
-
-
-
+import java.io.File
 
 
 class TrucksFragment : Fragment() {
@@ -38,6 +34,13 @@ class TrucksFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupSearch()
+
+        val file = File(requireActivity().filesDir, "records.txt")
+
+        settingsButton.setOnClickListener {
+            val intent = Intent(requireActivity(), SettingsActivity::class.java)
+            startActivity(intent)
+        }
 
     }
 

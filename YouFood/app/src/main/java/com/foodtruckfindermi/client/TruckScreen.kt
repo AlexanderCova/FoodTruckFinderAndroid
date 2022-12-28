@@ -1,5 +1,6 @@
 package com.foodtruckfindermi.client
 
+import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Base64
@@ -7,13 +8,18 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
 import com.foodtruckfindermi.client.Adapter.TruckPagerAdapter
+import com.foodtruckfindermi.client.Fragments.PremiumPopupFragment
 import com.foodtruckfindermi.client.databinding.ActivityTruckScreenBinding
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.coroutines.awaitStringResponseResult
-import com.google.android.gms.maps.*
-import kotlinx.android.synthetic.main.activity_truck_screen.*
-import kotlinx.android.synthetic.main.fragment_truck_reviews.*
+import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.tasks.await
 import org.json.JSONObject
 import java.io.File
 
@@ -58,6 +64,8 @@ class TruckScreen : AppCompatActivity() {
         truckName = intent.getStringExtra("TruckName") as String
         val flag = intent.getStringExtra("flag") as String
         val backButton = binding.truckBackButton
+        val db = Firebase.firestore
+        val charset = "ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz0123456789"
 
         val file = File(filesDir, "records.txt").readLines()
         val email = file[0]
@@ -66,7 +74,95 @@ class TruckScreen : AppCompatActivity() {
         val infoTabButton = binding.infoTabButton
         val mapTabButton = binding.mapTabButton
         val reviewsTabButton = binding.reviewsTabButton
+        val messageBtn = binding.truckMessageButton
 
+        val viewModel = qonversionViewModel()
+
+        if (viewModel.hasPremiumPermission) {
+
+            messageBtn.setImageResource(R.drawable.ic_message_regular)
+            messageBtn.setPadding(toDP(12), toDP(12), toDP(12), toDP(12))
+
+            messageBtn.setOnClickListener {
+
+                    val userDoc = db.collection("Users").document(email)
+                    val truckDoc = db.collection("Users").document(truckemail)
+
+
+                    val docRef = db.collection("Groups")
+                        .whereEqualTo("participants", arrayListOf(userDoc, truckDoc))
+
+                    docRef.get().addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            val document = task.result
+                            if (document.documents.isNotEmpty()) {
+                                runBlocking {
+                                    val intent = Intent(this@TruckScreen, ChatScreen::class.java)
+                                    intent.putExtra("groupID", document.documents[0].id)
+                                    intent.putExtra("email", email)
+
+                                    startActivity(intent)
+
+
+                                }
+                            } else {
+                                runBlocking {
+                                    val intent = Intent(this@TruckScreen, ChatScreen::class.java)
+                                    intent.putExtra("email", email)
+
+
+                                    val newGroupDoc = db.collection("Groups").document()
+                                    newGroupDoc.set(
+                                        mapOf(
+                                            "messages" to ArrayList<String>(),
+                                            "senders" to ArrayList<DocumentReference>(),
+                                            "participants" to arrayListOf<DocumentReference>(
+                                                userDoc,
+                                                truckDoc
+                                            )
+                                        )
+                                    )
+
+                                    val truckGroups =
+                                        getDocInfo(truckDoc)["groups"] as ArrayList<DocumentReference>
+                                    val userGroups =
+                                        getDocInfo(userDoc)["groups"] as ArrayList<DocumentReference>
+
+                                    truckGroups.add(newGroupDoc)
+                                    userGroups.add(newGroupDoc)
+
+                                    userDoc.set(mapOf("groups" to userGroups))
+                                    truckDoc.set(mapOf("groups" to truckGroups))
+
+
+
+                                    intent.putExtra("groupID", getDocInfo(newGroupDoc).id)
+
+
+                                    startActivity(intent)
+                                }
+                            }
+
+                        } else {
+                            Log.d("TAG", "Error: ", task.exception)
+                        }
+                    }
+
+
+
+                }
+
+
+
+        } else {
+            messageBtn.setImageResource(R.drawable.ic_premium_messaging)
+            messageBtn.setPadding(toDP(15), toDP(12), toDP(10), toDP(12) )
+
+            messageBtn.setOnClickListener {
+                val popup = PremiumPopupFragment()
+                popup.show(supportFragmentManager, "premium-popup")
+            }
+        }
 
 
 
@@ -200,5 +296,20 @@ class TruckScreen : AppCompatActivity() {
         }
 
 
+    }
+
+    fun toDP(pixels : Int) : Int {
+        return (pixels * this.resources.displayMetrics.density).toInt()
+    }
+
+    fun getRandomString(length: Int) : String {
+        val charset = "ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz0123456789"
+        return (1..length)
+            .map { charset.random() }
+            .joinToString("")
+    }
+
+    private suspend fun getDocInfo(doc: DocumentReference): DocumentSnapshot {
+        return doc.get().await()
     }
 }

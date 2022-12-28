@@ -14,6 +14,7 @@ class MainActivity : AppCompatActivity() {
         if (file.exists()){
             val intent = Intent(this, UserScreen::class.java)
             startActivity(intent)
+            finish()
         }
 
         super.onCreate(savedInstanceState)
@@ -26,13 +27,23 @@ class MainActivity : AppCompatActivity() {
         loginButton.setOnClickListener {
             val intent = Intent(this, LoginScreen::class.java)
             startActivity(intent)
+            finish()
         }
 
         signupButton.setOnClickListener {
             val intent = Intent(this, SignupScreen::class.java)
             startActivity(intent)
+            finish()
         }
     }
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finish()
+        System.out.close()
+    }
+
+
+
 }
 
 

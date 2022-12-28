@@ -54,7 +54,7 @@ class SignupScreen : AppCompatActivity(), TextWatcher {
                             } else {
                                 file.createNewFile()
 
-                                val record = emailEdit.text.toString() + "\n" + passwordEdit.text.toString()
+                                val record = emailEdit.text.toString() + "\n" + passwordEdit.text.toString() + "\n" + "false"
 
                                 openFileOutput("records.txt", Context.MODE_PRIVATE).use {
                                     it.write(record.toByteArray())

@@ -37,7 +37,7 @@ class TruckAdapter(private val context : Activity, private val arrayList : Array
                 if (adList[position] == null) {
 
                     MobileAds.initialize(context)
-                    // Production id ca-app-pub-9521285260882146/4870385084
+                    //TODO Production id ca-app-pub-9521285260882146/4870385084
                     //Test Id ca-app-pub-3940256099942544/2247696110
 
                     val inflater: LayoutInflater = LayoutInflater.from(context)
