@@ -3,6 +3,7 @@ package com.foodtruckfindermi.client.Fragments
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -36,11 +37,33 @@ class TrucksFragment : Fragment() {
         setupSearch()
 
         val file = File(requireActivity().filesDir, "records.txt")
+        val activity = (activity as UserScreen)
 
-        settingsButton.setOnClickListener {
-            val intent = Intent(requireActivity(), SettingsActivity::class.java)
-            startActivity(intent)
+
+        searchButton.setOnClickListener {
+            var params = truckSearchView.layoutParams
+            searchButton.visibility = View.GONE
+
+            object : CountDownTimer(3000, 100) {
+                override fun onTick(p0: Long) {
+                    params.width += 100
+
+                    truckSearchView.layoutParams = params
+                }
+
+                override fun onFinish() {
+                    params.width = 350
+                    truckSearchView.layoutParams = params
+                }
+
+
+            }
+
+
         }
+
+
+
 
     }
 

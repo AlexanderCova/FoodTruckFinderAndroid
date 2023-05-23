@@ -1,18 +1,27 @@
 package com.foodtruckfindermi.client
 
+
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Editable
+
 import android.util.Log
 import android.widget.*
+import androidx.core.app.ServiceCompat.stopForeground
+
 import com.foodtruckfindermi.client.Adapter.MessagesAdapter
+import com.github.kittinunf.fuel.Fuel
+import com.github.kittinunf.fuel.coroutines.awaitStringResponseResult
+
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
+
 
 class ChatScreen : AppCompatActivity() {
 
@@ -39,6 +48,7 @@ class ChatScreen : AppCompatActivity() {
         userDoc = db.collection("Users").document(email)
 
 
+
         backButton.setOnClickListener {
             onBackPressed()
         }
@@ -49,14 +59,31 @@ class ChatScreen : AppCompatActivity() {
                     val data = getDocInfo(db.collection("Groups").document(groupID))
                     val messagesCache = data["messages"] as ArrayList<String>
                     val sendersCache = data["senders"] as ArrayList<DocumentReference>
+                    val participantsList = data["participants"] as ArrayList<DocumentReference>
+
+                    participantsList.remove(userDoc)
+                    val receiver = getDocInfo(participantsList[0])
 
                     messagesCache.add(messageEntry.text.toString())
                     sendersCache.add(userDoc)
 
-                    db.collection("Groups").document(groupID).set(mapOf("messages" to messagesCache, "senders" to sendersCache))
-                    messageEntry.text.clear()
+                    db.collection("Groups").document(groupID).set(mapOf("messages" to messagesCache, "senders" to sendersCache), SetOptions.merge())
 
-                    refreshList()
+
+                    val (_, _, result) = Fuel.post(
+                        "http://foodtruckfindermi.com/send-notification",
+                        listOf("receiver_id" to receiver.id, "message" to messageEntry.text.toString())).awaitStringResponseResult()
+
+                    result.fold({
+                        messageEntry.text.clear()
+                        refreshList()
+
+
+                    },
+                        { error -> Log.e("http", "$error") })
+
+
+
                 }
             }
 

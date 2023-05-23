@@ -1,18 +1,27 @@
 package com.foodtruckfindermi.client
 
+import android.Manifest
 import android.app.Application
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
+
 import android.os.Bundle
 import android.util.Log
 import android.widget.*
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.foodtruckfindermi.client.Adapter.PagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.foodtruckfindermi.client.Fragments.PremiumPopupFragment
 import com.foodtruckfindermi.client.Fragments.TwoFactorLoginFragment
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.FirebaseApp
+import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.FirebaseMessaging
 import com.qonversion.android.sdk.Qonversion
 import java.io.File
 
@@ -23,9 +32,11 @@ class UserScreen : AppCompatActivity() {
     private lateinit var eventBtn : ImageButton
     private lateinit var messageBtn : ImageButton
     private lateinit var mPagerAdapter: PagerAdapter
+    private lateinit var token: String
 
     private lateinit var mPagerViewAdapter: PagerAdapter
     lateinit var viewModel: qonversionViewModel
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,9 +70,15 @@ class UserScreen : AppCompatActivity() {
         mViewPager.offscreenPageLimit = 2
 
 
+
+
+
+
+
+
         if (viewModel.hasPremiumPermission) {
             messageBtn.setImageResource(R.drawable.ic_message_regular)
-            messageBtn.setPadding(toDP(12), toDP(12), toDP(12), toDP(12) )
+            messageBtn.setPadding(toDP(12), toDP(12), toDP(12), toDP(12))
 
             messageBtn.setOnClickListener {
                 val intent = Intent(this, MessagesScreen::class.java)
@@ -69,19 +86,37 @@ class UserScreen : AppCompatActivity() {
                 startActivity(intent)
             }
 
+            FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    Log.e("Messaging Token", task.exception.toString())
+                    return@OnCompleteListener
+                }
+
+                // Get new FCM registration token
+                token = task.result
+                Log.i("Messaging Token", token)
+
+
+            })
+
+
             val userDoc = db.collection("Users").document(email)
             Log.i("Firebase", userDoc.toString())
 
             userDoc.get().addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     val document = task.result
-                    if(document != null) {
+                    if (document != null) {
                         if (document.exists()) {
+
+                            userDoc.set(hashMapOf("token" to token), SetOptions.merge())
+
                             return@addOnCompleteListener
                         } else {
                             val userData = hashMapOf(
                                 "groups" to listOf<String>(),
-                                "name" to email
+                                "name" to email,
+                                "token" to token
                             )
 
                             userDoc.set(userData)
@@ -93,11 +128,9 @@ class UserScreen : AppCompatActivity() {
             }
 
 
-
-
         } else {
             messageBtn.setImageResource(R.drawable.ic_premium_messaging)
-            messageBtn.setPadding(toDP(15), toDP(12), toDP(10), toDP(12) )
+            messageBtn.setPadding(toDP(15), toDP(12), toDP(10), toDP(12))
 
             messageBtn.setOnClickListener {
                 val popup = PremiumPopupFragment()
@@ -131,11 +164,10 @@ class UserScreen : AppCompatActivity() {
 
 
 
-
-
     }
 
-    private fun changeTabs(position: Int) {
+
+        private fun changeTabs(position: Int) {
 
 
         if (position == 0) {
